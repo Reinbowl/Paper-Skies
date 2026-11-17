@@ -1,0 +1,538 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Paper Skies</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=theme-color content=#efe6d6><style>html{background:#efe6d6}body{position:fixed;top:0;left:0;width:100%;height:100%;margin:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#fbf7ef,#efe6d6 60%,#e2d6c1);font:600 clamp(13px,.7vw + .9vh,34px)/1.45 system-ui,sans-serif;color:#2e2b33;-webkit-user-select:none;user-select:none}@media(orientation:portrait)and (pointer:coarse){body{width:100dvh;height:100dvw;transform-origin:0 0;transform:rotate(90deg) translateY(-100%)}}canvas{position:absolute;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:filter 1.2s,transform 1.2s,opacity 2s}body:not(.g) canvas{filter:blur(.8vmax) saturate(.85) brightness(1.04);transform:scale(1.05)}.l canvas{opacity:0}#m{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:min(2em,5vmin);padding:1em;text-align:center;background:radial-gradient(closest-side,#fbf7efd9,#f6f0e4a6 55%,#efe6d633);transition:opacity .6s,visibility .6s}.g #m,.m #l,.l #g{opacity:0;visibility:hidden}#m svg{width:3.6em;height:3.6em;margin-bottom:-.6em}h1{margin:0;font:400 4.2em/1 Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif;letter-spacing:.08em;color:#2e2b33}#n{margin:-.6em 0 0;font-size:.8em;letter-spacing:.5em;text-transform:uppercase;color:#8a7f72}p{margin:0}#a{display:grid;width:26em;max-width:100%}#a>*{grid-area:1/1;transition:opacity .8s,visibility .8s}#s,#w,#q,#k,#h{font-size:.8em;letter-spacing:.12em;text-transform:uppercase}#s{color:#6d6458}#w{margin-top:1.2em;color:#b5533c;text-wrap:balance}#p{height:.35em;margin:.4em 0 1em;overflow:hidden;background:#e4d9c6;box-shadow:inset 0 1px 2px #0002}#b{display:block;height:100%;background:linear-gradient(90deg,#c8553d,#e08a5c);transform:scaleX(0);transform-origin:0;will-change:transform}.e #p{visibility:hidden}.e #s{font-size:1.1em;letter-spacing:0;text-transform:none;color:#2e2b33}button{position:relative;display:flex;align-items:center;justify-content:center;gap:.6em;padding:.8em 1.4em;border:0;background:#fbf7ef;box-shadow:0 .15em .1em #6b5a4426,0 .5em 1.2em #6b5a4422;clip-path:polygon(0 0,calc(100% - .9em) 0,100% .9em,100% 100%,0 100%);font:700 1em/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#2e2b33;cursor:pointer;transition:transform .15s,filter .15s}button:after{content:"";position:absolute;top:0;right:0;width:.9em;height:.9em;background:linear-gradient(225deg,#0000 50%,#0000001f 50%,#fff6)}button:hover{transform:translateY(-.12em);filter:brightness(1.04)}button:active{transform:translateY(.08em);filter:brightness(.96)}:focus-visible{outline:2px solid #c8553d;outline-offset:3px}#g{display:grid;gap:min(1.1em,3.2vmin);justify-items:stretch}#r{display:flex;gap:1em}#r button{flex:1;padding:1em;font-size:1.2em}#fly{background:#c8553d;color:#fdf7ee}#auto{background:#34506f;color:#f3efe6}#q,#k,#h{padding:.9em 1.4em;background:#fbf7efb3;box-shadow:0 .3em 1em #6b5a441a}#q{display:flex;align-items:center;gap:.4em;padding:.4em}#q span{flex:1;color:#8a7f72}#q button{flex:1.2;padding:.6em 0;background:none;box-shadow:none;clip-path:none}#q button:after{display:none}#q button:hover{background:#2e2b3310}#q .on{background:#2e2b33;color:#fbf7ef;pointer-events:none}#k{display:flex;justify-content:center;gap:2em;text-align:left}#k p{display:grid;grid-template-columns:auto auto;align-content:start;align-items:center;gap:.55em .9em}#k p+p{padding-left:2em;border-left:1px solid #2e2b3326}#k i{display:flex;justify-self:end;align-items:center;gap:.25em;font-style:normal;color:#8a7f72}#k b{min-width:1.1em;padding:.15em .5em;background:#fff;box-shadow:0 .12em #2e2b3333;color:#2e2b33;text-align:center}#h{display:none}@media(pointer:coarse),(max-height:30em){#k{display:none}}@media(pointer:coarse){#h{display:block}}#o{position:absolute;top:.6em;right:.6em;display:none;padding:.3em .7em;font-size:1.3em;opacity:.85}.g #o{display:flex}.p #o{display:none}#t{position:absolute;left:50%;bottom:8%;margin:0;padding:.5em 1.4em;transform:translate(-50%);font-size:.85em;letter-spacing:.4em;text-transform:uppercase;color:#fbf7ef;background:#2e2b3366;opacity:0;transition:opacity .8s;pointer-events:none}#t.on{opacity:1;transition:opacity .3s}#i{position:absolute;top:1em;left:1.2em;margin:0;font:.8em/1.6 ui-monospace,Consolas,monospace;color:#fff;white-space:pre-wrap;text-shadow:0 1px 4px #000;pointer-events:none}</style></head><body class=l><canvas id=c></canvas><div id=m><svg viewBox="0 0 64 40"><path fill=#c8553d d="M2 20 62 4 26 26z"/><path fill=#9c3f2c d="M26 26 62 4 30 36z"/><path fill=#e9a17f d="M2 20 26 26 22 30z"/></svg><h1>Paper Skies</h1><p id=n>an origami flight</p><div id=a><div id=l><div id=p><i id=b></i></div><p id=s>Unfolding…</p><p id=w hidden>Use Google Chrome for the best experience</p></div><div id=g><div id=r><button id=fly>Fly</button><button id=auto>Autopilot</button></div><p id=q><span>Detail</span><button>Low</button><button>Medium</button><button>High</button></p><div id=k><p><i><b>Mouse</b></i>Steer
+          <i><b>W</b><b>A</b><b>S</b><b>D</b></i>Climb · turn
+          <i><b>Shift</b></i>Gust
+          <i><b>Tab</b></i>Fly / autopilot
+        </p><p><i><b>T</b></i>Hurry time
+          <i><b>Esc</b></i>Menu
+          <i><b>M</b></i>Mute
+          <i><b>H</b></i>Stats
+        </p></div><p id=h>Hold and slide to steer · second finger for a gust</p></div></div></div><button id=o aria-label=Menu>≡</button><p id=t></p><pre id=i></pre><script>(async()=>{const Ze=matchMedia("(pointer:coarse)").matches,Us=navigator.deviceMemory,pt=(e,t)=>{try{localStorage[e]=t}catch{}};let Ct=[],we,Vs;try{Ct=(localStorage.paperskies||"").split(","),Vs=localStorage.paperskiesLoad}catch{}we=Ct[0]?+Ct[0]:Ze?Us>7?1:2:Us<=4?2:0,Vs&&we<2&&(Ct=[++we],pt("paperskies",we));const Ws=1<<we,dt=we>1?1:4,Jt=we>1?1024:2048,W=we>1?1024:2048,{sin:Y,cos:ne,tan:A0,sqrt:ct,min:Ce,max:ve,abs:_e,floor:me,round:xe,PI:rt,pow:jt,atan2:en,hypot:Pe,exp:Ae,asin:Yc}=Math,fe=rt*2;let At=20261117;const S=()=>{At=At+1831565813|0;let e=Math.imul(At^At>>>15,1|At);return e=e+Math.imul(e^e>>>7,61|e)^e,((e^e>>>14)>>>0)/4294967296},R=(e,t)=>e+(t-e)*S(),Fe=e=>{At=20261117+Math.imul(e,7919)|0},ye=(e,t,n)=>e<t?t:e>n?n:e,Je=(e,t,n)=>e+(t-e)*n,he=(e,t,n)=>(n=ye((n-e)/(t-e),0,1),n*n*(3-2*n)),Xc=e=>e-me(e),tn=(e,t)=>{let n=(t-e)%fe;return n>rt&&(n-=fe),n<-rt&&(n+=fe),n},Tt=(e,t)=>{let n=Math.imul(e,374761393)+Math.imul(t,668265263)|0;return n=Math.imul(n^n>>>13,1274126177),((n^n>>>16)>>>0)/4294967296},Hs=e=>{const t=me(e);let n=e-t;return n=n*n*(3-2*n),Je(Tt(t,7),Tt(t+1,7),n)},T0=(e,t)=>{const n=me(e),s=me(t);let c=e-n,r=t-s;return c=c*c*(3-2*c),r=r*r*(3-2*r),Je(Je(Tt(n,s),Tt(n+1,s),c),Je(Tt(n,s+1),Tt(n+1,s+1),c),r)},Ys=(e,t,n=4)=>{let s=.5,c=0;for(let r=0;r<n;r++)c+=s*T0(e,t),e=e*2.03+17.1,t=t*2.03+31.7,s*=.5;return c/(1-2*s)},be=3072,ae=-be/2,vt=be/(W-1),ue=4,kt=-1.5,_=32,je=be/_,nn=[700,-620];class Ee{constructor(){this.p=[],this.a=[],this.i=[]}v(t,n,s,c=0,r=255,i=0,a=0){return this.p.push(t,n,s),this.a.push(c,r,i,a),this.p.length/3-1}tri(t,n,s){this.i.push(t,n,s)}quad(t,n,s,c){this.i.push(t,n,s,t,s,c)}fan(t,n,s){for(let c=0;c<t.length;c++){const r=t[c],i=t[(c+1)%t.length];s?this.tri(r,n,i):this.tri(r,i,n)}}band(t,n){for(let s=0;s<t.length;s++){const c=(s+1)%t.length;this.quad(t[s],t[c],n[c],n[s])}}ring(t,n,s,c,r,i=0,a=0){const d=[];for(let l=0;l<t;l++){const v=i+l/t*fe,x=typeof s=="function"?s(l):s;d.push(this.v(ne(v)*x,n,Y(v)*x,c,r,a))}return d}box(t,n,s,c,r,i,a,d=255){const l=[[t,n,s],[c,n,s],[c,n,i],[t,n,i],[t,r,s],[c,r,s],[c,r,i],[t,r,i]].map(v=>this.v(v[0],v[1],v[2],a,d));this.quad(l[0],l[1],l[2],l[3]),this.quad(l[4],l[7],l[6],l[5]),this.quad(l[0],l[4],l[5],l[1]),this.quad(l[1],l[5],l[6],l[2]),this.quad(l[2],l[6],l[7],l[3]),this.quad(l[3],l[7],l[4],l[0])}add(t,n){const s=this.p.length/3;for(let c=0;c<t.p.length;c+=3){const r=n?n(t.p[c],t.p[c+1],t.p[c+2]):[t.p[c],t.p[c+1],t.p[c+2]];this.p.push(r[0],r[1],r[2])}this.a.push(...t.a);for(const c of t.i)this.i.push(c+s)}build(){const t=this.p.length/3,n=new ArrayBuffer(t*16),s=new Float32Array(n),c=new Uint8Array(n);for(let r=0;r<t;r++){s[r*4]=this.p[r*3],s[r*4+1]=this.p[r*3+1],s[r*4+2]=this.p[r*3+2];for(let i=0;i<4;i++)c[r*16+12+i]=this.a[r*4+i]}return{vb:n,ib:new Uint32Array(this.i),nv:t}}}function sn(e,t,n=0){const s=new Ee,c=(1+ct(5))/2,r=[[-1,c,0],[1,c,0],[-1,-c,0],[1,-c,0],[0,-1,c],[0,1,c],[0,-1,-c],[0,1,-c],[c,0,-1],[c,0,1],[-c,0,-1],[-c,0,1]].map(a=>{const d=Pe(...a);return a.map(l=>l/d)});let i=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];for(let a=0;a<e;a++){const d=new Map,l=[],v=(x,z)=>{const k=x<z?x*65536+z:z*65536+x;let D=d.get(k);if(D===void 0){const u=[0,1,2].map(M=>r[x][M]+r[z][M]),X=Pe(...u);r.push(u.map(M=>M/X)),D=r.length-1,d.set(k,D)}return D};for(const[x,z,k]of i){const D=v(x,z),u=v(z,k),X=v(k,x);l.push([x,D,X],[z,u,D],[k,X,u],[D,u,X])}i=l}for(const a of r){const d=t?t(a[0],a[1],a[2]):a;s.v(d[0],d[1],d[2],n)}for(const a of i)s.tri(a[0],a[1],a[2]);return s}const k0=640,Wn=.5,mt=new Float32Array([-.4,.016,.024,.062,.06,.075,.15,.045,.06,.12,.016,.018,.03,-.14,.035,.05,.13,.2,.17,.3,.09,.1,.2,.03,.03,.05,-.03,.13,.15,.33,.85,.46,.4,.28,.24,.32,.12,.08,.08,.06,.3,.4,.68,1.15,.7,.46,.5,.46,.5,.26,.18,.12,.25,.25,.48,.86,1,.84,.68,.6,.66,.78,.32,.27,.2,.75,.2,.45,.88,.88,.88,.84,.62,.72,.9,.34,.31,.24]),P0=mt.length/13,I=new Float64Array(36),on=0,Hn=4,Me=8,ht=12,Yn=15,Xs=16,z0=19,L0=22,S0=25,Ks=28,$s=29,cn=30;function Qs(e,t){let n=ne(e),s=Y(e)*ne(Wn)+.2,c=Y(e)*Y(Wn);const r=ct(n*n+s*s+c*c);n/=r,s/=r,c/=r,I[t]=n,I[t+1]=s,I[t+2]=c,I[t+3]=he(-.12,.02,s)}const E0=e=>1+1.6*he(-.05,-.3,Y(e)*ne(Wn)+.2);function Zs(e){Qs(e,on),Qs(e+rt,Hn);const t=I[on+1];let n=0;for(;n<P0-2&&t>mt[(n+1)*13];)n++;let s=ye((t-mt[n*13])/(mt[(n+1)*13]-mt[n*13]),0,1);s=s*s*(3-2*s);for(let d=0;d<12;d++)I[Xs+d]=Je(mt[n*13+1+d],mt[(n+1)*13+1+d],s);const c=2*he(-.03,.1,t),r=.42*he(.03,.16,-t),i=c>0?on:Hn;I[Me]=I[i],I[Me+1]=I[i+1],I[Me+2]=I[i+2],I[Me+3]=c+r;const a=he(.02,.4,t);c>0?(I[ht]=1,I[ht+1]=Je(.58,.93,a),I[ht+2]=Je(.34,.82,a)):(I[ht]=.6,I[ht+1]=.72,I[ht+2]=1),I[Yn]=he(.02,-.16,t),I[Ks]=he(.07,-.06,t),I[$s]=Je(.78,1.5,he(0,-.3,t)),I[cn]=t}const rn=`
+@vertex fn vs(@builtin(vertex_index) i: u32) -> @builtin(position) vec4f { return vec4f(f32(i32(i & 1u) * 4 - 1), f32(i32(i >> 1u) * 4 - 1), 0., 1.); }
+`,Js=`
+fn ss(a: f32, b: f32, x: f32) -> f32 { let t = clamp((x - a) / (b - a), 0., 1.); return t * t * (3. - 2. * t); }
+fn h21(p: vec2f) -> f32 { var q = fract(vec3f(p.xyx) * .1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }
+fn vn(p: vec2f) -> f32 {
+  let i = floor(p); let f = fract(p); let u = f * f * (3. - 2. * f);
+  return mix(mix(h21(i), h21(i + vec2f(1., 0.)), u.x), mix(h21(i + vec2f(0., 1.)), h21(i + vec2f(1., 1.)), u.x), u.y);
+}
+fn fbm(p: vec2f, n: i32) -> f32 {
+  var a = .5; var s = 0.; var q = p;
+  for (var i = 0; i < n; i++) { s += a * vn(q); q = q * 2.03 + vec2f(17.1, 31.7); a *= .5; }
+  return s / (1. - 2. * a);
+}
+fn ridged(p: vec2f, n: i32) -> f32 {
+  var a = .5; var s = 0.; var q = p;
+  for (var i = 0; i < n; i++) { s += a * (1. - abs(2. * vn(q) - 1.)); q = q * 2.03 + vec2f(17.1, 31.7); a *= .5; }
+  return s / (1. - 2. * a);
+}
+`,R0=Js+`
+struct U { n: u32, ni: u32, gs: f32, wo: f32 };
+@group(0) @binding(0) var<uniform> u: U;
+@group(0) @binding(1) var<storage, read_write> H: array<f32>;
+@group(0) @binding(2) var<storage, read> I: array<vec4f>;
+fn smax(a: f32, b: f32, k: f32) -> f32 { let h = max(k - abs(a - b), 0.) / k; return max(a, b) + h * h * k * .25; }
+fn height(p: vec2f) -> f32 {
+  let w = vec2f(fbm(p * .0023 + 3.1, 3), fbm(p * .0023 + 17.7, 3)) - .5;
+  var h = -42. + 8. * (fbm(p * .003 + 40., 3) - .5);
+  for (var i = 0u; i < u.ni; i++) {
+    let a = I[i * 2u]; let b = I[i * 2u + 1u];
+    let q = p + w * b.y;
+    let d = length(q - a.xy) / a.z;
+    var e = -1e3;
+    if (b.x < .5) {
+      let f = max(1. - d * d, 0.);
+      e = -42. + (a.w + 42.) * f * f * (1. + b.z * (fbm(q * .011 + b.w, 4) - .5));
+    } else if (b.x < 1.5) {
+      let an = atan2(q.y - a.y, q.x - a.x);
+      let gul = ridged(vec2f(an * 6.4 + b.w, d * 4.), 3);
+      let cone = pow(max(1. - d, 0.), 1.7);
+      let top = min(cone, .93) / .93 - .035 * ss(.07, .0, d);
+      e = -42. + (a.w + 42.) * top - b.z * gul * ss(.0, .3, d) * ss(1., .5, d) * 26.;
+    } else {
+      let f = exp(-pow(d, 5.));
+      e = -42. + (a.w + 42.) * f * (1. + .18 * (fbm(q * .05 + b.w, 3) - .5));
+    }
+    h = smax(h, e, 7.);
+  }
+  // rolling detail on the land, softened right at the shore so beaches stay wide
+  let land = ss(-4., 24., h);
+  h += 22. * (fbm(p * .0075 + 7.7, 4) - .5) * land;
+  h = mix(h, .4 * h + 1.5, ss(-2., 1., h) * ss(9., 3., h) * .55);
+  return h;
+}
+@compute @workgroup_size(8, 8) fn main(@builtin(global_invocation_id) id: vec3u) {
+  if (id.x >= u.n || id.y >= u.n) { return; }
+  H[id.x + id.y * u.n] = height(vec2f(id.xy) * u.gs + u.wo);
+}
+`,N0=Js+rn+`
+fn hp(p: vec2f, per: f32) -> f32 { return h21(p - per * floor(p / per) + per * 1.7); }
+fn tn(p: vec2f, per: f32) -> f32 {
+  let i = floor(p); let f = fract(p); let u = f * f * (3. - 2. * f);
+  return mix(mix(hp(i, per), hp(i + vec2f(1., 0.), per), u.x), mix(hp(i + vec2f(0., 1.), per), hp(i + vec2f(1., 1.), per), u.x), u.y);
+}
+fn tf(uv: vec2f, per: f32, n: i32) -> f32 { var a = .5; var s = 0.; var pr = per; for (var i = 0; i < n; i++) { s += a * tn(uv * pr + f32(i) * 7.3, pr); pr *= 2.; a *= .5; } return s / (1. - 2. * a); }
+// long kozo fibres: a few gently curved strands per cell, drawn as soft lines
+fn fibres(uv: vec2f, per: f32) -> f32 {
+  let p = uv * per; let i = floor(p); var a = 0.;
+  for (var x = -1; x <= 1; x++) { for (var y = -1; y <= 1; y++) {
+    let c = i + vec2f(f32(x), f32(y)); let cw = c - per * floor(c / per);
+    for (var k = 0; k < 3; k++) {
+      let r = vec3f(h21(cw * 1.3 + f32(k) * 9.1), h21(cw * 2.1 + f32(k) * 4.7), h21(cw * .7 + f32(k) * 13.3));
+      let o = c + r.xy; let an = r.z * 6.2831; let d = vec2f(cos(an), sin(an));
+      let q = p - o; let along = clamp(dot(q, d), -1.1, 1.1);
+      let bend = .18 * (r.x - .5) * along * along;
+      let perp = abs(dot(q, vec2f(-d.y, d.x)) - bend);
+      a += (1. - ss(.0, .035 + .02 * r.y, perp)) * ss(1.1, .6, abs(along)) * (.5 + .5 * r.y);
+    }
+  } }
+  return a;
+}
+@fragment fn fs(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let uv = fc.xy / 1024.;
+  let f = min(fibres(uv, 9.) * .7 + fibres(uv + .37, 23.) * .45, 1.);
+  let gr = tf(uv, 96., 3) * .6 + h21(floor(fc.xy)) * .4;
+  let m = tf(uv, 4., 5);
+  return vec4f(f, gr, m, 1.);
+}
+`,q0=rn+`
+@group(0) @binding(0) var t: texture_2d<f32>;
+@group(0) @binding(1) var s: sampler;
+fn uvOf(fc: vec4f, k: f32) -> vec2f { return fc.xy * k / vec2f(textureDimensions(t)); }
+@fragment fn fsMip(@builtin(position) fc: vec4f) -> @location(0) vec4f { return textureSampleLevel(t, s, uvOf(fc, 2.), 0.); }
+fn kar(c: vec3f) -> vec4f { let w = 1. / (1. + max(c.r, max(c.g, c.b))); return vec4f(c * w, w); }
+@fragment fn fsDown0(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let uv = uvOf(fc, 2.); let e = 1. / vec2f(textureDimensions(t));
+  let a = kar(min(textureSampleLevel(t, s, uv + e * vec2f(-1., -1.), 0.).rgb, vec3f(24.)));
+  let b = kar(min(textureSampleLevel(t, s, uv + e * vec2f(1., -1.), 0.).rgb, vec3f(24.)));
+  let c = kar(min(textureSampleLevel(t, s, uv + e * vec2f(-1., 1.), 0.).rgb, vec3f(24.)));
+  let d = kar(min(textureSampleLevel(t, s, uv + e * vec2f(1., 1.), 0.).rgb, vec3f(24.)));
+  let m = a + b + c + d;
+  return vec4f(max(m.rgb / m.a - vec3f(2.4), vec3f(0.)), 1.);
+}
+@fragment fn fsDown(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let uv = uvOf(fc, 2.); let e = 1. / vec2f(textureDimensions(t));
+  return (textureSampleLevel(t, s, uv + e * vec2f(-1., -1.), 0.) + textureSampleLevel(t, s, uv + e * vec2f(1., -1.), 0.)
+        + textureSampleLevel(t, s, uv + e * vec2f(-1., 1.), 0.) + textureSampleLevel(t, s, uv + e * vec2f(1., 1.), 0.)) * .25;
+}
+@fragment fn fsUp(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let uv = uvOf(fc, .5); let e = .75 / vec2f(textureDimensions(t));
+  return (textureSampleLevel(t, s, uv + e * vec2f(-1., -1.), 0.) + textureSampleLevel(t, s, uv + e * vec2f(1., -1.), 0.)
+        + textureSampleLevel(t, s, uv + e * vec2f(-1., 1.), 0.) + textureSampleLevel(t, s, uv + e * vec2f(1., 1.), 0.)) * .25;
+}
+`,I0=rn+`
+struct SU { d: vec4f };
+@group(0) @binding(0) var<uniform> su: SU;
+@group(0) @binding(1) var tH: texture_2d<f32>;
+const N = ${W}; const L = ${ue}.; const MAXH = 250.;
+fn hq(p: vec2f) -> f32 {
+  let i = clamp(vec2i(floor(p)), vec2i(0), vec2i(N - 2)); let f = clamp(p - vec2f(i), vec2f(0.), vec2f(1.));
+  let a = textureLoad(tH, i, 0).r; let b = textureLoad(tH, i + vec2i(1, 0), 0).r;
+  let c = textureLoad(tH, i + vec2i(0, 1), 0).r; let d = textureLoad(tH, i + vec2i(1, 1), 0).r;
+  return floor(mix(mix(a, b, f.x), mix(c, d, f.x), f.y) / L) * L;
+}
+@fragment fn fs(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let p0 = fc.xy - .5;
+  let h0 = hq(p0);
+  let rise = su.d.z;
+  var s = -2.; var t = .7;
+  for (var i = 0; i < 200; i++) {
+    let q = p0 + su.d.xy * t;
+    if (q.x < 0. || q.y < 0. || q.x > f32(N - 1) || q.y > f32(N - 1) || MAXH - h0 - t * rise < s) { break; }
+    s = max(s, hq(q) - h0 - t * rise);
+    t += max(.7, t * .03);
+  }
+  return vec4f(s, 0., 0., 1.);
+}
+`,js=`
+struct G { vp: mat4x4f, sm: mat4x4f, cam: vec4f, right: vec4f, up: vec4f, fwd: vec4f, key: vec4f, keyc: vec4f, sun: vec4f, moon: vec4f,
+  zen: vec4f, hor: vec4f, ambs: vec4f, ambg: vec4f, res: vec4f, pr: vec4f, pu: vec4f, pf: vec4f, pp: vec4f, mis: vec4f };
+const TAU = 6.2831853;
+const L = ${ue}.;
+const WL = ${kt};
+fn sat(x: f32) -> f32 { return clamp(x, 0., 1.); }
+fn ss(a: f32, b: f32, x: f32) -> f32 { let t = clamp((x - a) / (b - a), 0., 1.); return t * t * (3. - 2. * t); }
+fn ign(p: vec2f) -> f32 { return fract(52.9829189 * fract(dot(p, vec2f(.06711056, .00583715)))); }
+fn h21(p: vec2f) -> f32 { var q = fract(vec3f(p.xyx) * .1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }
+fn fin(c: vec3f) -> vec4f { return vec4f(min(max(c, vec3f(0.)), vec3f(60.)), 1.); }
+// the sky: a gradient of overlapping paper strips with gently torn edges, glowing around the sun and the moon
+fn skyc(rd: vec3f, g: G) -> vec3f {
+  let e = max(rd.y, 0.);
+  let t = pow(1. - e, 2.4);
+  let az = atan2(rd.z, rd.x);
+  let w = .16 * sin(az * 3. + 1.3) + .06 * sin(az * 7. + g.cam.w * .01) + .025 * sin(az * 23. + 2.);
+  let bq = t * 6. + w;
+  let fr = fract(bq);
+  let tq = clamp((floor(bq) + ss(.42, .58, fr) - w) / 6., 0., 1.);
+  var c = mix(g.zen.rgb, g.hor.rgb, tq);
+  c *= 1. - .045 * ss(.58, .64, fr) * ss(.95, .7, fr) * (1. - t * .6);
+  let ms = max(dot(rd, g.sun.xyz), 0.);
+  c += vec3f(1., .6, .34) * (pow(ms, 5.) * .32 + pow(ms, 48.) * .55) * g.sun.w * (1. - g.keyc.w);
+  let mm = max(dot(rd, g.moon.xyz), 0.);
+  c += vec3f(.35, .45, .8) * (pow(mm, 8.) * .1 + pow(mm, 60.) * .3) * g.moon.w * g.keyc.w;
+  if (rd.y < 0.) { c = mix(c, g.hor.rgb * .92, ss(0., -.08, rd.y)); }
+  return c;
+}
+// distance haze toward the horizon colour, thicker low over the sea
+fn hazeAmt(wp: vec3f, g: G) -> f32 {
+  let d = distance(wp, g.cam.xyz);
+  let y0 = max(g.cam.y, 0.); let y1 = max(wp.y, 0.); let H = 220.;
+  let dy = y1 - y0;
+  var k = exp(-y0 / H);
+  if (abs(dy) > 1.) { k = H * (exp(-y0 / H) - exp(-y1 / H)) / dy; }
+  return 1. - exp(-d * k / 2600.);
+}
+fn haze(c: vec3f, wp: vec3f, g: G) -> vec3f {
+  let rd = normalize(wp - g.cam.xyz);
+  return mix(c, skyc(normalize(vec3f(rd.x, .0, rd.z)), g), hazeAmt(wp, g));
+}
+`,_t=js+`
+@group(0) @binding(0) var<uniform> g: G;
+@group(0) @binding(1) var sR: sampler;
+@group(0) @binding(2) var sC: sampler;
+@group(0) @binding(3) var sS: sampler_comparison;
+@group(0) @binding(4) var tSh: texture_depth_2d;
+@group(0) @binding(5) var tH: texture_2d<f32>;
+@group(0) @binding(6) var tS: texture_2d<f32>;
+@group(0) @binding(7) var tD: texture_2d<f32>;
+@group(0) @binding(8) var tM: texture_2d<f32>;
+const GN = ${W}; const GS = ${vt}; const WO = ${ae}.; const WORLD = ${be}.;
+// height of the land (bilinear) and its gradient
+fn hgrid(p: vec2f) -> vec3f {
+  let u = (p - WO) / GS;
+  let i = clamp(vec2i(floor(u)), vec2i(0), vec2i(GN - 2)); let f = clamp(u - vec2f(i), vec2f(0.), vec2f(1.));
+  let a = textureLoad(tH, i, 0).r; let b = textureLoad(tH, i + vec2i(1, 0), 0).r;
+  let c = textureLoad(tH, i + vec2i(0, 1), 0).r; let d = textureLoad(tH, i + vec2i(1, 1), 0).r;
+  return vec3f(mix(mix(a, b, f.x), mix(c, d, f.x), f.y), mix(b - a, d - c, f.y) / GS, mix(c - a, d - b, f.x) / GS);
+}
+fn sheetY(h: f32) -> f32 { return max(floor(h / L) * L, WL); }
+// shadow of the land: rel = height of the point above the sheet it stands on
+fn shLand(p: vec2f, rel: f32) -> f32 {
+  let s = textureSampleLevel(tS, sC, ((p - WO) / GS + .5) / f32(GN), 0.).r;
+  return ss(-.35, .35, rel - s);
+}
+// shadow of the props and the plane, from the light map that follows the plane
+fn shNear(p: vec3f) -> f32 {
+  let s = g.sm * vec4f(p, 1.);
+  let uv = vec2f(s.x * .5 + .5, .5 - s.y * .5);
+  let fade = ss(.5, .44, max(abs(uv.x - .5), abs(uv.y - .5)));
+  if (fade <= 0.) { return 1.; }
+  let e = 1. / ${Jt}.; let z = s.z - .0004;
+  let v = (textureSampleCompareLevel(tSh, sS, uv + vec2f(-e, -e) * .7, z) + textureSampleCompareLevel(tSh, sS, uv + vec2f(e, -e) * .7, z)
+         + textureSampleCompareLevel(tSh, sS, uv + vec2f(-e, e) * .7, z) + textureSampleCompareLevel(tSh, sS, uv + vec2f(e, e) * .7, z)) * .25;
+  return mix(1., v, fade);
+}
+// paper: fibres, grain and soft mottling, projected along the face's main axis
+fn paperUV(wp: vec3f, n: vec3f) -> vec2f {
+  let a = abs(n);
+  if (a.y > a.x && a.y > a.z) { return wp.xz; }
+  if (a.x > a.z) { return wp.zy; }
+  return wp.xy;
+}
+fn paper(wp: vec3f, n: vec3f, sc: f32) -> f32 {
+  let uv = paperUV(wp, n);
+  let d = distance(wp, g.cam.xyz);
+  let a = textureSample(tD, sR, uv * sc);
+  let b = textureSample(tD, sR, uv * sc * .083 + .31);
+  let near = ss(90., 20., d * sc);
+  return 1. + ((a.r - .3) * .1 + (a.g - .5) * .08) * near + (b.b - .5) * .12;
+}
+// soft matte paper: wrapped diffuse from the key light, light through thin sheets, sky and ground fill
+fn shade(base: vec3f, n: vec3f, sh: f32, ao: f32, thin: f32) -> vec3f {
+  let ndl = dot(n, g.key.xyz);
+  let diff = max((ndl + .3) / 1.3, 0.) * sh;
+  let back = max(-ndl, 0.) * thin * sh * .5;
+  let amb = mix(g.ambg.rgb, g.ambs.rgb, n.y * .5 + .5) * ao;
+  return base * (g.keyc.rgb * g.key.w * (diff + back) + amb);
+}
+fn faceN(wp: vec3f) -> vec3f {
+  var n = normalize(cross(dpdx(wp), dpdy(wp)));
+  if (dot(n, g.cam.xyz - wp) < 0.) { n = -n; }
+  return n;
+}
+fn lin(c: vec3f) -> vec3f { return pow(c, vec3f(2.2)); }
+`,D0=_t+`
+struct SO { @builtin(position) cp: vec4f, @location(0) ndc: vec2f };
+@vertex fn vs(@builtin(vertex_index) i: u32) -> SO {
+  let p = vec2f(f32(i32(i & 1u) * 4 - 1), f32(i32(i >> 1u) * 4 - 1));
+  return SO(vec4f(p, 0., 1.), p);
+}
+// little folded stars: five points, one side of each point lighter than the other
+fn stars(rd: vec3f) -> vec3f {
+  let el = asin(clamp(rd.y, -1., 1.)); let az = atan2(rd.z, rd.x);
+  let sc = 38.; let p = vec2f(az * sc * cos(el), el * sc);
+  var c = vec3f(0.);
+  let i = floor(p);
+  for (var x = -1; x <= 1; x++) { for (var y = -1; y <= 1; y++) {
+    let cc = i + vec2f(f32(x), f32(y));
+    let r = h21(cc + 17.); if (r > .3) { continue; }
+    let o = cc + vec2f(h21(cc), h21(cc + 5.1)) * .8 + .1;
+    let q = (p - o) / (.11 + .14 * h21(cc + 2.2));
+    let a = atan2(q.y, q.x) + h21(cc + 9.) * 6.28; let rr = length(q);
+    let k = cos(a * 5.) * .5 + .5;
+    let edge = mix(.42, 1., pow(k, 3.));
+    let m = 1. - ss(edge - .08, edge + .02, rr);
+    let side = select(.75, 1., sin(a * 5.) > 0.);
+    let tw = .75 + .25 * sin(g.cam.w * (.6 + h21(cc + 3.) * 1.2) + r * 40.);
+    c += vec3f(1., .9, .66) * m * side * tw * (.6 + 1.2 * h21(cc + 1.));
+  } }
+  return c;
+}
+@fragment fn fs(i: SO) -> @location(0) vec4f {
+  let rd = normalize(g.fwd.xyz + g.right.xyz * i.ndc.x * g.right.w + g.up.xyz * i.ndc.y * g.up.w);
+  var c = skyc(rd, g);
+  c *= .97 + .06 * (textureSample(tD, sR, vec2f(atan2(rd.z, rd.x) * 1.3, rd.y * 2.) * 2.).b - .5);
+  if (rd.y > 0.) { c += stars(rd) * ss(-.07, -.24, g.ambs.w) * ss(0., .15, rd.y) * .9; }
+  return fin(c);
+}
+`,B0=_t+`
+struct OO { @builtin(position) cp: vec4f, @location(0) wp: vec3f, @location(1) @interpolate(flat) part: u32, @location(2) dir: vec3f };
+@vertex fn vs(@location(0) p: vec3f, @location(1) a: vec4u) -> OO {
+  let moon = a.x >= 8u;
+  let d = select(g.sun.xyz, g.moon.xyz, moon);
+  let vis = select(g.sun.w, g.moon.w, moon);
+  let r = normalize(cross(d, vec3f(0., 1., 0.))); let u = cross(r, d);
+  let D = 6000.; let R = D * select(.062, .05, moon) * step(.001, vis);
+  let wp = g.cam.xyz + d * D + (r * p.x + u * p.y - d * p.z) * R;
+  return OO(g.vp * vec4f(wp, 1.), wp, a.x, d);
+}
+@fragment fn fs(i: OO) -> @location(0) vec4f {
+  let n = faceN(i.wp);
+  let r = normalize(cross(i.dir, vec3f(0., 1., 0.))); let u = cross(r, i.dir);
+  let lit = .72 + .4 * sat(dot(n, normalize(u * .7 - r * .5 - i.dir * .5)));
+  var c: vec3f;
+  switch (i.part) {
+    case 0u: { c = vec3f(3.4, 1.65, .5); }
+    case 1u: { c = vec3f(3.6, 2.2, .7); }
+    case 2u: { c = vec3f(3.2, 1.2, .42); }
+    case 8u: { c = vec3f(1.5, 1.45, 1.25); }
+    default: { c = vec3f(1.25, 1.18, 1.); }
+  }
+  c *= lit;
+  if (i.part < 8u) { c *= mix(vec3f(1.), vec3f(1.15, .72, .5), ss(.3, 0., i.dir.y)); }
+  c = mix(c, skyc(normalize(vec3f(i.dir.x, 0., i.dir.z)), g), ss(.12, -.06, i.dir.y) * .45);
+  return fin(c);
+}
+`,O0=_t+`
+struct TO { @builtin(position) cp: vec4f, @location(0) wp: vec3f, @location(1) n: vec4f };
+@vertex fn vs(@location(0) p: vec3f, @location(1) n: vec4f) -> TO { return TO(g.vp * vec4f(p, 1.), p, n); }
+// paper colours by height: deep sea indigo, aqua shallows, sand, greens, stone, snow (sRGB)
+fn layerCol(y: f32) -> vec3f {
+  var P = array<vec4f, 12>(vec4f(-44., .15, .25, .42), vec4f(-24., .2, .4, .55), vec4f(-10., .36, .6, .66), vec4f(-4., .55, .76, .72),
+    vec4f(0., .91, .85, .69), vec4f(4., .75, .82, .55), vec4f(16., .58, .74, .45), vec4f(40., .42, .62, .4), vec4f(80., .45, .55, .41),
+    vec4f(124., .6, .58, .5), vec4f(168., .76, .74, .69), vec4f(196., .95, .94, .91));
+  var c = P[0].yzw;
+  for (var i = 1; i < 12; i++) { let a = P[i - 1]; let b = P[i]; if (y > a.x) { c = mix(a.yzw, b.yzw, sat((y - a.x) / (b.x - a.x))); } }
+  return c;
+}
+// the karst pillars keep to misty jade greens all the way up
+fn karst(p: vec2f) -> f32 { return ss(420., 260., length((p - vec2f(${nn[0]}, ${nn[1]})) * vec2f(1., 1.2))); }
+fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), ss(10., 150., y)); }
+@fragment fn fs(i: TO) -> @location(0) vec4f {
+  let top = i.n.y > .5;
+  let v = i.n.w;
+  var k = round(i.wp.y / L);
+  if (!top) { k = round((i.wp.y - v * L) / L) + 1.; }
+  let y = k * L;
+  let hg = hgrid(i.wp.xz);
+  let gl = max(length(hg.yz), .015);
+  // each sheet its own shade, alternating slightly so neighbouring sheets read apart
+  let jit = h21(vec2f(k, 3.7));
+  var base = mix(layerCol(y), jade(y), karst(i.wp.xz) * ss(2., 8., y)) * (1. + .05 * (jit - .5) + .025 * select(-1., 1., (i32(k) & 1) == 0));
+  let reg = vn2(i.wp.xz * .0016);
+  base *= mix(vec3f(1.04, 1.02, .9), vec3f(.95, 1., 1.05), reg) ;
+  let gm = textureSampleLevel(tM, sC, (i.wp.xz - WO) / WORLD, 0.);
+  base = mix(base, base * vec3f(.82, .9, .84), gm.g * ss(2., 6., y));
+  base = mix(base, vec3f(.96, .8, .84), gm.b * .35 * ss(2., 6., y));
+  var n = i.n.xyz;
+  var ao = 1.; var sh = 1.;
+  if (top) {
+    let up = ((k + 1.) * L - hg.x) / gl;
+    ao = mix(.5, 1., ss(0., 4.5, up)) * mix(.88, 1., ss(0., 1.2, up));
+    let own = (hg.x - y) / gl;
+    base *= 1. + .07 * ss(.45, .0, own);
+    sh = shLand(i.wp.xz, 0.);
+  } else {
+    base = mix(base, vec3f(.97, .95, .9), .16);
+    base *= mix(.42, 1., ss(.0, .2, v)) * (1. + .1 * ss(.9, 1., v));
+    ao = .9;
+    sh = shLand(i.wp.xz + n.xz * GS * .6, i.wp.y - y + L);
+  }
+  ao *= 1. - gm.r * .5;
+  sh *= shNear(i.wp + n * .05);
+  var c = shade(lin(base) * paper(i.wp, n, .4), n, sh, ao, 0.);
+  return fin(haze(c, i.wp, g));
+}
+fn vn2(p: vec2f) -> f32 {
+  let i = floor(p); let f = fract(p); let u = f * f * (3. - 2. * f);
+  return mix(mix(h21(i), h21(i + vec2f(1., 0.)), u.x), mix(h21(i + vec2f(0., 1.)), h21(i + vec2f(1., 1.)), u.x), u.y);
+}
+`,C0=_t+`
+struct WO_ { @builtin(position) cp: vec4f, @location(0) wp: vec3f };
+@vertex fn vs(@builtin(vertex_index) i: u32) -> WO_ {
+  let c = vec2f(f32(i & 1u), f32(i >> 1u)) * 2. - 1.;
+  let wp = vec3f(g.cam.x + c.x * 9000., WL, g.cam.z + c.y * 9000.);
+  return WO_(g.vp * vec4f(wp, 1.), wp);
+}
+fn wv(v: vec2f) -> f32 { let h = h21(v * 1.37 + 3.1); return .32 * sin(g.cam.w * (.5 + .35 * h) + h * TAU); }
+fn wpos(v: vec2f, s: f32) -> vec3f { return vec3f((v.x + v.y * .5) * s, wv(v), v.y * .8660254 * s); }
+fn facet(p: vec2f) -> vec3f {
+  let s = 7.; let q = p / s;
+  let b = q.y / .8660254; let a = q.x - b * .5;
+  let ia = floor(a); let ib = floor(b);
+  var v0 = vec2f(ia, ib); var v1 = vec2f(ia + 1., ib); var v2 = vec2f(ia, ib + 1.);
+  if (a - ia + b - ib > 1.) { v0 = vec2f(ia + 1., ib + 1.); v1 = vec2f(ia, ib + 1.); v2 = vec2f(ia + 1., ib); }
+  let p0 = wpos(v0, s); let n = normalize(cross(wpos(v2, s) - p0, wpos(v1, s) - p0));
+  return select(n, -n, n.y < 0.);
+}
+@fragment fn fs(i: WO_) -> @location(0) vec4f {
+  let hg = hgrid(i.wp.xz);
+  let fl = floor(hg.x / L) * L;
+  let depth = WL - fl;
+  let d = distance(i.wp, g.cam.xyz);
+  let v = normalize(g.cam.xyz - i.wp);
+  let n = normalize(mix(facet(i.wp.xz), vec3f(0., 1., 0.), ss(300., 1400., d)));
+  let deep = ss(2., 30., depth);
+  var col = lin(mix(vec3f(.62, .86, .84), vec3f(.16, .36, .52), deep));
+  let sh = mix(.45, 1., shLand(i.wp.xz, depth) * shNear(i.wp));
+  var c = shade(col, n, sh, 1., .4) * paper(i.wp, vec3f(0., 1., 0.), .25);
+  let fr = .04 + .5 * pow(1. - sat(dot(n, v)), 4.);
+  c = mix(c, skyc(reflect(-v, n), g), fr);
+  let hv = normalize(g.key.xyz + v);
+  c += g.keyc.rgb * g.key.w * pow(max(dot(n, hv), 0.), 160.) * 1.4 * sh;
+  var a = mix(.42, .95, ss(1., 26., depth));
+  // shore: a strip of white paper that slowly breathes in and out
+  let dsh = -hg.x / max(length(hg.yz), .02);
+  let wob = .5 + .5 * sin(g.cam.w * .6 + i.wp.x * .045 + i.wp.z * .037);
+  let foam = (1. - ss(.7, 1.1, dsh / (1.2 + 1.3 * wob) + .25 * (h21(floor(i.wp.xz * 2.)) - .5))) * ss(-8., -1., hg.x);
+  c = mix(c, shade(vec3f(.93, .93, .9), vec3f(0., 1., 0.), sh, 1., 0.), foam * .9);
+  a = max(a, foam * .95);
+  c = haze(c, i.wp, g);
+  a = mix(a, 1., hazeAmt(i.wp, g));
+  return vec4f(min(c, vec3f(60.)) * a, a);
+}
+`,_0=_t+`
+override KIND = 0;
+struct PI { @location(0) p: vec3f, @location(1) at: vec4u, @location(2) a: vec4f, @location(3) b: vec4f };
+struct PO { @builtin(position) cp: vec4f, @location(0) wp: vec3f, @location(1) @interpolate(flat) part: u32, @location(2) shade: f32,
+  @location(3) col: vec3f, @location(4) lp: vec3f, @location(5) @interpolate(flat) glow: f32 };
+fn rotY(p: vec3f, a: f32) -> vec3f { let c = cos(a); let s = sin(a); return vec3f(p.x * c + p.z * s, p.y, -p.x * s + p.z * c); }
+fn unpack(c: f32) -> vec3f { let u = u32(c); return vec3f(f32((u >> 16u) & 255u), f32((u >> 8u) & 255u), f32(u & 255u)) / 255.; }
+fn place(i: PI) -> vec3f {
+  let t = g.cam.w; var p = i.p; let a = i.a; let b = i.b;
+  if (KIND == 0) {
+    if (i.at.x == 1u) { let sw = p.y * p.y * .004 * b.w; p.x += sin(t * .9 + b.z * 30.) * sw; p.z += sin(t * .7 + b.z * 17.) * sw * .6; }
+    return a.xyz + rotY(p * a.w, b.x);
+  }
+  if (KIND == 1) {
+    let sz = 1.1 + b.z * .5;
+    let span = f32(i.at.z) / 127.5 - 1.;
+    p.y += sin(t * 3.1 + b.z * 40.) * abs(span) * abs(span) * .55 - .08 * abs(span);
+    let th = b.x + t * b.w / a.w;
+    let bob = sin(t * .4 + b.z * 9.) * 3.;
+    let c = vec3f(a.x + cos(th) * a.w, a.y + bob, a.z + sin(th) * a.w);
+    let f = normalize(vec3f(-sin(th), .04 * cos(t * .4 + b.z * 9.), cos(th)) * sign(b.w));
+    let r = normalize(cross(vec3f(0., 1., 0.), f)); let u = cross(f, r);
+    let bank = -.25 * sign(b.w);
+    let rr = r * cos(bank) + u * sin(bank); let uu = u * cos(bank) - r * sin(bank);
+    return c + (rr * p.x + uu * p.y + f * p.z) * sz;
+  }
+  if (KIND == 2) {
+    let dr = vec2f(cos(t * .015 + b.z * 6.3), sin(t * .015 + b.z * 6.3)) * b.w;
+    var q = rotY(p * a.w, b.x + sin(t * .3 + b.z * 5.) * .15);
+    q.y += q.x * sin(t * .9 + b.z * 7.) * .05 + q.z * sin(t * .7 + b.z * 3.) * .04;
+    return vec3f(a.x + dr.x, WL + sin(t * 1.1 + b.z * 20.) * .12, a.z + dr.y) + q;
+  }
+  if (KIND == 3) {
+    var x = a.x + t * b.w; x = x - 3600. * floor((x + 1800.) / 3600.);
+    return vec3f(x, a.y, a.z) + rotY(p * a.w, b.x);
+  }
+  if (KIND == 4) {
+    let rise = fract(t * b.w / 140. + b.z);
+    let y = a.y + select(sin(t + b.z * 9.) * .1, rise * 140., b.w > 0.);
+    let s = a.w * ss(.0, .25, g.hor.w) * select(1., ss(1., .85, rise) * ss(0., .04, rise), b.w > 0.);
+    let sw = vec3f(sin(t * .3 + b.z * 6.), 0., cos(t * .23 + b.z * 4.)) * rise * 6.;
+    return vec3f(a.x, y, a.z) + sw + rotY(p * s, b.x + t * .1);
+  }
+  // KIND 5: the plane, wing tips flexing with the load
+  let ax = abs(p.x);
+  p.y += g.pr.w * ax * ax * .5 + g.pu.w * sin(g.cam.w * 23. + p.x * 3.) * ax * .02;
+  let s = g.pf.w;
+  return g.pp.xyz + (g.pu.xyz * p.y + g.pf.xyz * p.z - g.pr.xyz * p.x) * s;
+}
+@vertex fn vs(i: PI) -> PO {
+  let wp = place(i);
+  var col = unpack(i.b.y);
+  return PO(g.vp * vec4f(wp, 1.), wp, i.at.x, f32(i.at.y) / 255., col, i.p, select(0., 1., KIND == 4));
+}
+@vertex fn vsSh(i: PI) -> @builtin(position) vec4f { return g.sm * vec4f(place(i), 1.); }
+// seigaiha: rows of overlapping circles of concentric arcs, each row drawn over the one before
+fn seigaiha(p: vec2f) -> f32 {
+  let j0 = i32(floor(p.y * 2.)) - 2;
+  var best = -1.; var d = 9.;
+  for (var j = j0; j <= j0 + 4; j++) {
+    let o = f32(j & 1);
+    let cy = f32(j) * .5;
+    let cx = floor((p.x - o) * .5 + .5) * 2. + o;
+    for (var k = -1; k <= 1; k++) {
+      let e = length(p - vec2f(cx + f32(k) * 2., cy));
+      if (e < 1. && f32(j) > best) { best = f32(j); d = e; }
+    }
+  }
+  let v = abs(fract(d * 3.) - .5);
+  return (1. - ss(.06, .13, v)) * step(.2, d);
+}
+@fragment fn fs(i: PO, @builtin(front_facing) ff: bool) -> @location(0) vec4f {
+  let n = faceN(i.wp);
+  var base: vec3f; var thin = .25; var emit = vec3f(0.);
+  switch (i.part) {
+    case 0u: { base = vec3f(.55, .42, .32); thin = 0.; }
+    case 1u: { base = i.col; }
+    case 2u: { base = vec3f(.95, .93, .88); thin = .1; }
+    case 3u: {
+      base = vec3f(.3, .28, .3);
+      emit = lin(vec3f(1., .72, .4)) * 3.5 * g.hor.w;
+    }
+    case 4u: { base = vec3f(.2, .19, .22); thin = 0.; }
+    case 5u: { base = vec3f(.72, .7, .66); thin = 0.; }
+    case 6u: { base = i.col; emit = lin(i.col) * 7. * g.hor.w; thin = .6; }
+    default: { base = i.col * .78; }
+  }
+  if (KIND == 5) {
+    let pat = seigaiha(i.lp.xz * 3.2);
+    base = select(vec3f(.97, .96, .92), mix(i.col, vec3f(1., .86, .72), pat * .32), ff);
+    thin = .7;
+  }
+  if (KIND == 3) { thin = .9; }
+  base = lin(base) * i.shade;
+  let hg = hgrid(i.wp.xz);
+  let rel = i.wp.y - sheetY(hg.x);
+  var sh = shLand(i.wp.xz, rel);
+  if (KIND != 3) { sh *= shNear(i.wp + n * .04); }
+  var c = shade(base * paper(i.wp, n, select(.9, 2.2, KIND == 5)), n, sh, 1., thin) + emit;
+  if (i.glow > 0.) { c = base * 5. * g.hor.w + c * .4; }
+  return fin(haze(c, i.wp, g));
+}
+`,F0=js+rn+`
+@group(0) @binding(0) var<uniform> g: G;
+@group(0) @binding(1) var sC: sampler;
+@group(0) @binding(2) var tS: texture_2d<f32>;
+@group(0) @binding(3) var tB: texture_2d<f32>;
+fn tmap(x: vec3f) -> vec3f { return clamp((x * (2.51 * x + .03)) / (x * (2.43 * x + .59) + .14), vec3f(0.), vec3f(1.)); }
+@fragment fn fs(@builtin(position) fc: vec4f) -> @location(0) vec4f {
+  let px = vec2i(fc.xy);
+  let uv = fc.xy * g.res.zw;
+  var c = textureLoad(tS, px, 0).rgb;
+  let bl = textureSampleLevel(tB, sC, uv, 0.).rgb;
+  c += bl * .5;
+  c *= g.zen.w;
+  let q = uv - .5;
+  c *= 1. - dot(q, q) * .4;
+  c = tmap(c);
+  let l = dot(c, vec3f(.2126, .7152, .0722));
+  c = mix(c, l * vec3f(.82, .92, 1.12), g.keyc.w * .38);
+  c = pow(max(c, vec3f(0.)), vec3f(1. / 2.2));
+  c = c * .985 + vec3f(.012, .01, .016);
+  let n = ign(fc.xy) + ign(fc.xy + 37.) - 1.;
+  return vec4f(c + n / 255., 1.);
+}
+`,an=[[-130,60,660,34,0,130,.9],[-220,-60,560,236,1,22,.12],[210,200,330,54,0,120,1.1],[-40,560,280,22,0,110,.8],[-830,700,340,66,0,140,1.2],[-560,1e3,190,28,0,90,.8],[930,380,260,44,0,120,1],[1010,300,190,92,1,30,.5],[120,-1020,180,26,0,90,.8],[-520,-900,240,58,0,120,1.1],[-1120,-160,170,34,0,80,.9],[480,820,70,9,0,40,.5],[-260,1180,60,7,0,30,.5],[1180,-260,80,10,0,40,.5],[-1160,380,70,8,0,40,.5]];Fe(1);for(let e=0;e<22;e++){const t=S()*fe,n=ct(S())*300;an.push([nn[0]+ne(t)*n,nn[1]+Y(t)*n*.8,R(26,62),R(40,150),2,18,.6])}const M0=()=>{const e=[];for(const t of an)e.push(t[0],t[1],t[2],t[3],t[4],t[5],t[6],S()*100);return new Float32Array(e)};let Te=null;const pe=(e,t)=>{let n=(e-ae)/vt,s=(t-ae)/vt;n=n<0?0:n>W-1.001?W-1.001:n,s=s<0?0:s>W-1.001?W-1.001:s;const c=n|0,r=s|0,i=n-c,a=s-r,d=c+W*r,l=Te[d]+(Te[d+1]-Te[d])*i,v=Te[d+W]+(Te[d+W+1]-Te[d+W])*i;return l+(v-l)*a},et=(e,t)=>{const n=me(pe(e,t)/ue)*ue;return n>kt?n:kt},G0=(e,t)=>{const n=vt;return Pe(pe(e+n,t)-pe(e-n,t),pe(e,t+n)-pe(e,t-n))/(2*n)},Pt=(e,t)=>{const n=pe(e,t),s=ve(G0(e,t),.004),c=me(n/ue);return Ce(n-c*ue,(c+1)*ue-n)/s};function U0(){const e=W,t=e-1,n=new Int16Array(e*e);for(let m=0;m<e*e;m++)n[m]=me(Te[m]/ue);const s=new Int32Array(t*t),c=e/_,r=16;let i=new Int32Array(1<<18),a=0;const d=(m,p,A)=>{const g=n[m+e*p];for(let L=p;L<=p+A;L++)for(let N=m;N<=m+A;N++)if(n[N+e*L]!==g)return!1;return!0},l=(m,p,A)=>{if(a*3+3>i.length){const g=new Int32Array(i.length*2);g.set(i),i=g}i[a*3]=m,i[a*3+1]=p,i[a*3+2]=A;for(let g=p;g<p+A;g++)s.fill(a,m+t*g,m+A+t*g);a++},v=(m,p,A)=>{if(m>=t||p>=t)return;if(A===1||m+A<=t&&p+A<=t&&d(m,p,A))return l(m,p,A);const g=A>>1;v(m,p,g),v(m+g,p,g),v(m,p+g,g),v(m+g,p+g,g)},x=new Uint32Array(_*_+1);for(let m=0;m<_;m++)for(let p=0;p<_;p++){x[p+_*m]=a;for(let A=0;A<c;A+=r)for(let g=0;g<c;g+=r)v(p*c+g,m*c+A,r)}x[_*_]=a;let z=1<<21,k=new ArrayBuffer(z*16),D=new Float32Array(k),u=new Int8Array(k),X=0,M=new Uint32Array(1<<22),C=0;const h=(m,p,A,g,L,N)=>{if(X===z){z*=2;const oe=new ArrayBuffer(z*16);new Uint8Array(oe).set(new Uint8Array(k)),k=oe,D=new Float32Array(k),u=new Int8Array(k)}const Q=X*4;return D[Q]=m,D[Q+1]=p,D[Q+2]=A,u[Q*4+12]=xe(g*127),u[Q*4+13]=g===0&&L===0?127:0,u[Q*4+14]=xe(L*127),u[Q*4+15]=xe(N*127),X++},le=(m,p,A)=>{if(C+3>M.length){const g=new Uint32Array(M.length*2);g.set(M),M=g}M[C++]=m,M[C++]=p,M[C++]=A},J=m=>ae+m*vt,f=(m,p,A)=>h(J(m),A,J(p),0,0,1),G=new Float64Array(2),U=(m,p,A,g,L)=>{if(m+e*p>A+e*g){const oe=m;m=A,A=oe;const re=p;p=g,g=re}const N=Te[m+e*p],Q=(L-N)/(Te[A+e*g]-N);G[0]=J(m+(A-m)*Q),G[1]=J(p+(g-p)*Q)},se=[0,0,1,1],b=[0,1,1,0],y=new Float64Array(8),w=new Float64Array(8),T=new Uint8Array(8),q=new Int32Array(8),E=(m,p,A,g,L)=>{let N=p-g,Q=A-m;const oe=Pe(N,Q);if(oe<1e-6)return;N/=oe,Q/=oe;const re=h(m,L,p,N,Q,1),H=h(m,L-ue,p,N,Q,0),Z=h(A,L-ue,g,N,Q,0),j=h(A,L,g,N,Q,1);le(re,H,Z),le(re,Z,j)},K=(m,p)=>{const A=[Te[m+e*p],Te[m+e*(p+1)],Te[m+1+e*(p+1)],Te[m+1+e*p]];let g=1e9,L=-1e9;for(let Z=0;Z<4;Z++){const j=me(A[Z]/ue);j<g&&(g=j),j>L&&(L=j)}const N=g*ue,Q=f(m,p,N),oe=f(m,p+1,N),re=f(m+1,p+1,N),H=f(m+1,p,N);le(Q,oe,re),le(Q,re,H);for(let Z=g+1;Z<=L;Z++){const j=Z*ue;let ce=0;for(let $=0;$<4;$++){const Oe=$+1&3,Vn=A[$]>=j;Vn&&(y[ce]=J(m+se[$]),w[ce]=J(p+b[$]),T[ce++]=0),Vn!==A[Oe]>=j&&(U(m+se[$],p+b[$],m+se[Oe],p+b[Oe],j),y[ce]=G[0],w[ce]=G[1],T[ce++]=1)}if(ce===6&&A[0]>=j==A[2]>=j&&(A[0]+A[1]+A[2]+A[3])*.25<j){for(const $ of[0,3]){const Oe=($+5)%6,Vn=h(y[$],j,w[$],0,0,1),Wc=h(y[$+1],j,w[$+1],0,0,1),Hc=h(y[Oe],j,w[Oe],0,0,1);le(Vn,Wc,Hc),E(y[$+1],w[$+1],y[Oe],w[Oe],j)}continue}for(let $=0;$<ce;$++)q[$]=h(y[$],j,w[$],0,0,1);for(let $=1;$<ce-1;$++)le(q[0],q[$],q[$+1]);for(let $=0;$<ce;$++){const Oe=($+1)%ce;T[$]&&T[Oe]&&E(y[$],w[$],y[Oe],w[Oe],j)}}},P=new Int32Array(4*r+4),V=new Uint32Array(_*_+1),B=new Float32Array(_*_).fill(1e9),te=new Float32Array(_*_).fill(-1e9);for(let m=0;m<_*_;m++){V[m]=C;const p=X;for(let A=x[m];A<x[m+1];A++){const g=i[A*3],L=i[A*3+1],N=i[A*3+2],Q=n[g+e*L];if(N===1&&!(n[g+1+e*L]===Q&&n[g+e*(L+1)]===Q&&n[g+1+e*(L+1)]===Q)){K(g,L);continue}const oe=Q*ue;let re=0;P[re++]=f(g,L,oe);for(let H=L+1;H<L+N;H++)g>0&&s[g-1+t*(H-1)]!==s[g-1+t*H]&&(P[re++]=f(g,H,oe));P[re++]=f(g,L+N,oe);for(let H=g+1;H<g+N;H++)L+N<t&&s[H-1+t*(L+N)]!==s[H+t*(L+N)]&&(P[re++]=f(H,L+N,oe));P[re++]=f(g+N,L+N,oe);for(let H=L+N-1;H>L;H--)g+N<t&&s[g+N+t*(H-1)]!==s[g+N+t*H]&&(P[re++]=f(g+N,H,oe));P[re++]=f(g+N,L,oe);for(let H=g+N-1;H>g;H--)L>0&&s[H-1+t*(L-1)]!==s[H+t*(L-1)]&&(P[re++]=f(H,L,oe));if(re===4)le(P[0],P[1],P[2]),le(P[0],P[2],P[3]);else{const H=h(J(g+N/2),oe,J(L+N/2),0,0,1);for(let Z=0;Z<re;Z++)le(H,P[Z],P[(Z+1)%re])}}for(let A=p;A<X;A++){const g=D[A*4+1];g<B[m]&&(B[m]=g),g>te[m]&&(te[m]=g)}}return V[_*_]=C,{vb:k.slice(0,X*16),ib:M.slice(0,C),nv:X,start:V,lo:B,hi:te}}const gt=(e,t,n,s,c,r,i)=>{const a=e.p,d=a[n*3]-a[t*3],l=a[n*3+1]-a[t*3+1],v=a[n*3+2]-a[t*3+2],x=a[s*3]-a[t*3],z=a[s*3+1]-a[t*3+1],k=a[s*3+2]-a[t*3+2];(l*k-v*z)*c+(v*x-d*k)*r+(d*z-l*x)*i>=0?e.tri(t,n,s):e.tri(t,s,n)};function eo(e){const t=new Ee,n=t.ring(4,0,.28,0,120,rt/4),s=t.ring(4,2.4,.2,0,200,rt/4);t.band(n,s);const c=e?2:3;for(let r=0;r<c;r++){const i=e?r*1.5:r,a=1.5+i*2.1,d=2.5*(1-i*.26),l=e?6:12,v=[];for(let z=0;z<l;z++){const k=z/l*fe+r,D=e||z%2?d:d*.8;v.push(t.v(ne(k)*D,a+(z%2&&!e?.35:0),Y(k)*D,1,205))}const x=t.v(0,a+3.7*(1-i*.1),0,1,255);t.fan(v,x),t.fan(v,t.v(0,a+.5,0,1,110),!0)}return t}function to(e){const t=new Ee,n=t.ring(5,0,.3,0,120),s=t.ring(5,2.6,.22,0,200);t.band(n,s),Fe(40+e);const c=sn(e?0:1,(r,i,a)=>{const d=2.7*(1+R(-.12,.12));return[r*d,4.7+i*d*.88,a*d]},1);for(let r=0;r<c.a.length;r+=4)c.a[r+1]=xe(150+105*he(2.4,7,c.p[r/4*3+1]));return t.add(c),t}function V0(){Fe(44);const e=sn(0,(t,n,s)=>{const c=1.2*(1+R(-.15,.15));return[t*c,.6+n*c*.75,s*c]},1);for(let t=0;t<e.a.length;t+=4)e.a[t+1]=xe(160+95*he(0,1.4,e.p[t/4*3+1]));return e}function W0(){const e=new Ee,t=2.6,n=2.1,s=3,c=2.3;e.box(-t,0,-n,t,s,n,2);const r=.5,i=[e.v(-t-r,s-.3,-n-r,1),e.v(t+r,s-.3,-n-r,1),e.v(t+r,s+c,0,1,255),e.v(-t-r,s+c,0,1,255)];e.quad(i[0],i[1],i[2],i[3]);const a=[e.v(-t-r,s-.3,n+r,1,215),e.v(t+r,s-.3,n+r,1,215),e.v(t+r,s+c,0,1,235),e.v(-t-r,s+c,0,1,235)];e.quad(a[0],a[1],a[2],a[3]);for(const l of[-t,t])e.tri(e.v(l,s,-n,2),e.v(l,s,n,2),e.v(l,s+c-.1,0,2));const d=(l,v,x,z,k)=>e.quad(e.v(l,v,k,3),e.v(x,v,k,3),e.v(x,z,k,3),e.v(l,z,k,3));return d(-.5,0,.5,1.9,n+.03),d(-2,1.2,-1.1,2.1,n+.03),d(1.1,1.2,2,2.1,n+.03),d(-1.6,1.2,-.5,2.1,-n-.03),d(.5,1.2,1.6,2.1,-n-.03),e}function H0(){const e=new Ee;e.box(-5,-2,-5,5,.6,5,5);let t=.6;for(let n=0;n<4;n++){const s=3.3-n*.6;e.box(-s,t,-s,s,t+2.4,s,1),t+=2.4;const c=s+1.7,r=[];for(let a=0;a<8;a++){const d=a/8*fe+rt/4,l=a%2===0,v=l?c*Math.SQRT2:c;r.push(e.v(ne(d)*v,t+(l?.55:0),Y(d)*v,4,l?230:190))}const i=e.v(0,t+1.6,0,4,255);e.fan(r,i),e.fan(r,e.v(0,t-.2,0,4,90),!0),t+=.9}e.box(-.12,t,-.12,.12,t+3.2,.12,4);for(let n=0;n<4;n++)e.box(-.35,t+.7+n*.6,-.35,.35,t+.82+n*.6,.35,4);return e}function Y0(){const e=new Ee;for(const n of[-3.4,3.4]){const s=e.ring(8,-1,.46,4),c=e.ring(8,1.2,.45,4),r=e.ring(8,9,.38,1),i=e.ring(8,1.2,.45,1);e.band(s,c),e.band(i,r);for(const a of[...s,...c])e.p[a*3]+=n;for(const a of[...i,...r])e.p[a*3]+=n*(e.p[a*3+1]>5?.97:1)}const t=8;for(let n=0;n<t;n++){const s=-6+12*n/t,c=-6+12*(n+1)/t,r=d=>.016*d*d,i=[[s,9+r(s)],[c,9+r(c)]],a=(d,l,v,x)=>{const z=[e.v(i[0][0],i[0][1]+d,-v,x),e.v(i[1][0],i[1][1]+d,-v,x),e.v(i[1][0],i[1][1]+l,-v,x),e.v(i[0][0],i[0][1]+l,-v,x)],k=[e.v(i[0][0],i[0][1]+d,v,x),e.v(i[1][0],i[1][1]+d,v,x),e.v(i[1][0],i[1][1]+l,v,x),e.v(i[0][0],i[0][1]+l,v,x)];e.quad(z[0],z[1],z[2],z[3]),e.quad(k[0],k[1],k[2],k[3]),e.quad(z[3],z[2],k[2],k[3]),e.quad(z[0],z[1],k[1],k[0])};a(0,.6,.55,1),a(.6,.95,.7,4)}return e.box(-4.6,7.2,-.32,4.6,7.75,.32,1),e.box(-.3,7.75,-.28,.3,9,.28,1),e}function X0(){const e=new Ee,t=e.v(-1.1,-.35,0,1,170),n=e.v(1.1,-.35,0,1,170);for(const c of[-1,1]){const r=e.v(-2.1,.55,.75*c,1,230),i=e.v(2.1,.55,.75*c,1,230);e.quad(t,n,i,r)}for(const c of[-1,1]){const r=c<0?t:n;e.tri(r,e.v(2.1*c,.55,.75,1,210),e.v(2.1*c,.55,-.75,1,210))}const s=e.v(0,2.7,0,1,255);for(const c of[-1,1]){const r=e.v(0,.55,.32*c,1,220);e.tri(e.v(-1.25,.55,0,1,215),r,s),e.tri(r,e.v(1.25,.55,0,1,200),s)}return e}function K0(){const e=new Ee,t=r=>xe((r/1.9+1)*127.5),n=(r,i,a,d=255)=>e.v(r,i,a,1,d,t(r)),s=n(0,.12,.38),c=n(0,.12,-.38);for(const r of[-1,1]){const i=n(.95*r,.3,-.12,235),a=n(1.9*r,.42,-.5,255);gt(e,s,c,i,0,1,0),gt(e,s,i,a,0,1,0),gt(e,c,a,i,0,1,0);const d=n(.12*r,-.24,0,170);gt(e,s,c,d,r,0,0)}for(const r of[-1,1]){const i=n(0,.95,1.35*r,245),a=n(-.05,-.12,.28*r,200),d=n(.05,-.12,.28*r,200);e.tri(a,n(0,.14,.32*r),i),e.tri(d,n(0,.14,.32*r),i),r>0&&e.tri(i,n(0,.8,1.55,220),n(.03,.88,1.38,220))}return e}function no(e){Fe(60+e);const t=new Ee,n=4+S()*3|0;for(let s=0;s<n;s++){const c=R(-2.2,2.2),r=R(-1.2,1.2),i=R(.9,1.6)*(1-_e(c)*.15),a=i*.25,d=sn(1,(l,v,x)=>{const z=1+R(-.08,.08);return[c+l*i*z,a+(v<0?v*.3:v)*i*z*.85,r+x*i*z]},1);for(let l=0;l<d.a.length;l+=4)d.a[l+1]=xe(175+80*he(-.2,1.4,d.p[l/4*3+1]));t.add(d)}return t}function $0(){const e=new Ee,t=e.ring(6,0,.42,6,200),n=e.ring(6,1.2,.55,6,255);return e.band(t,n),e.fan(n,e.v(0,1.35,0,6,255)),e}function Q0(){return Fe(70),sn(0,(e,t,n)=>{const s=1+R(-.25,.25);return[e*s,t*s*.7,n*s]},5)}function Z0(){const e=new Ee,t=e.v(0,.02,1),n=e.v(0,0,-1);for(const s of[-1,1]){const c=e.v(.4*s,.05,-1),r=e.v(.95*s,.11,-.97);gt(e,t,n,c,0,1,0),gt(e,t,c,r,0,1,0);const i=e.v(.03*s,-.3,-.9);gt(e,t,n,i,s,0,0)}return e}function J0(){const e=new Ee,t=e.v(0,0,.3,0),n=32,s=[];for(let r=0;r<n;r++){const i=r/n*fe;s.push(e.v(ne(i),Y(i),r%2?.14:0,0))}e.fan(s,t);for(let r=0;r<12;r++){const i=(r+.5)/12*fe,a=.17,d=e.v(ne(i-a)*.97,Y(i-a)*.97,.02,2),l=e.v(ne(i+a)*.97,Y(i+a)*.97,.02,2),v=e.v(ne(i)*1.05,Y(i)*1.05,.1,2),x=e.v(ne(i)*1.42,Y(i)*1.42,0,2);e.tri(d,v,x),e.tri(v,l,x)}const c=e.ring(12,0,.42,1);for(const r of c){const i=e.p[r*3+1];e.p[r*3+1]=e.p[r*3+2],e.p[r*3+2]=.32}return e.fan(c,e.v(0,0,.5,1)),e}function j0(){const e=new Ee,t=20;let n=null;for(let s=0;s<=t;s++){const c=s/t*2-1,r=c*1.75,i=-ne(r),a=Y(r),d=.5*jt(ve(ne(c*1.45),0),.9)+.02,l=e.v(i,a,0,8),v=e.v(i*(1-d*.5),a*(1-d*.5),.12*d+.01,8),x=e.v(i*(1-d),a*(1-d),0,8);n&&(e.quad(n[0],l,v,n[1]),e.quad(n[1],v,x,n[2])),n=[l,v,x]}return e}const ee=(e,t,n)=>xe(e*255)*65536+xe(t*255)*256+xe(n*255),ec=[ee(.27,.45,.33),ee(.32,.51,.36),ee(.23,.41,.37),ee(.36,.5,.33)],so=[ee(.5,.65,.37),ee(.58,.68,.38),ee(.42,.6,.36),ee(.62,.7,.42)],tc=[ee(.97,.75,.8),ee(.94,.66,.73),ee(.98,.84,.86)],nc=[ee(.86,.4,.27),ee(.92,.55,.28)],sc=[ee(.3,.38,.5),ee(.62,.3,.24),ee(.36,.45,.4),ee(.24,.26,.32)],Xn=[ee(.97,.96,.92),ee(.96,.84,.82),ee(.78,.85,.93),ee(.95,.85,.6),ee(.86,.42,.33)],tt=e=>e[S()*e.length|0];function oc(){const e=_*_,t=(b,y)=>ye(me((b-ae)/je),0,_-1)+_*ye(me((y-ae)/je),0,_-1),n=Array.from({length:7},()=>Array.from({length:e},()=>[])),s=(b,y,w,T,q,E,K,P=0)=>n[b][t(y,T)].push(y,w,T,q,E,K,S(),P),c=1024,r=new Float32Array(c*c*3),i=(b,y,w,T,q)=>{const E=(b-ae)/be*c,K=(y-ae)/be*c,P=w/be*c;for(let V=me(K-P);V<=K+P;V++)for(let B=me(E-P);B<=E+P;B++){if(B<0||V<0||B>=c||V>=c)continue;const te=Pe(B+.5-E,V+.5-K)/P;te<1&&(r[(B+c*V)*3+T]+=q*(1-te*te))}},a=[],d=(b,y,w)=>{for(let T=0;T<a.length;T+=3)if(Pe(b-a[T],y-a[T+1])<w+a[T+2])return!1;return!0},l=(b,y,w)=>a.push(b,y,w),v=(b,y,w,T,q=4e3)=>{let E=null,K=-1/0;for(let P=0;P<q;P++){const V=S()*fe,B=ct(S())*w,te=b+ne(V)*B,m=y+Y(V)*B,p=T(te,m,B);p>K&&(K=p,E=[te,m])}return E};Fe(2);const x=v(-80,640,320,(b,y,w)=>{const T=pe(b,y);return T>-5&&T<-2.4&&Pt(b,y)>9?-w:-1e9},2e4),z=[pe(x[0]+4,x[1])-pe(x[0]-4,x[1]),pe(x[0],x[1]+4)-pe(x[0],x[1]-4)];s(5,x[0],et(x[0],x[1])-.05,x[1],1.3,en(z[0],z[1]),ee(.82,.27,.2)),l(x[0],x[1],14);const k=v(240,170,160,(b,y)=>{const w=pe(b,y);return Pt(b,y)>9&&w>20?w:-1e9});s(4,k[0],et(k[0],k[1]),k[1],1.25,S()*fe,ee(.8,.3,.22)),l(k[0],k[1],14);const D=[[-40,520,120],[250,330,90],[-780,640,110],[-470,-860,90],[900,420,90],[-330,380,90]],u=[];Fe(3);for(const b of D){const y=v(b[0],b[1],b[2]*.5,(T,q)=>{const E=pe(T,q);return E>2&&E<30?-_e(E-10):-1e9},600);u.push(y);let w=0;for(let T=0;T<900&&w<22;T++){const q=S()*fe,E=ct(S())*b[2],K=y[0]+ne(q)*E,P=y[1]+Y(q)*E,V=pe(K,P);if(V<1||V>44||Pt(K,P)<5.5||!d(K,P,5))continue;const B=R(.85,1.2);s(3,K,me(V/ue)*ue,P,B,me(S()*4)*rt/2+R(-.15,.15),tt(sc)),l(K,P,4.5*B),i(K,P,7,0,.35),w++}}Fe(4);const X=(b,y)=>{let w=1e9;for(const T of u)w=Ce(w,Pe(b-T[0],y-T[1]));return w},M=9e4/Ws;for(let b=0;b<M*4;b++){const y=ae+S()*be,w=ae+S()*be,T=pe(y,w);if(T<3||T>178)continue;const q=he(.45,.62,Ys(y*.004,w*.004,4)),E=X(y,w),K=he(170,60,E);if(S()>q*.9+K*.35+.025)continue;const P=R(.7,1.35);if(Pt(y,w)<1.6*P||!d(y,w,1.4*P))continue;const V=me(T/ue)*ue,B=S()*fe;K>.3&&S()<.55?(s(1,y,V,w,P*.9,B,tt(tc),1),i(y,w,5,2,.5)):T>70||S()<.45*(1-K)?s(0,y,V,w,P*Je(1,.75,he(80,170,T)),B,tt(ec),.6):S()<.05?s(1,y,V,w,P,B,tt(nc),1):s(1,y,V,w,P,B,tt(so),1),i(y,w,3.2*P,0,.3),i(y,w,8,1,.09)}Fe(5);for(let b=0;b<4e4/Ws;b++){const y=ae+S()*be,w=ae+S()*be,T=pe(y,w);T<2||T>120||Pt(y,w)<1.2||!d(y,w,1)||S()>.15+.5*he(.4,.6,Ys(y*.004+9,w*.004,3))||(s(2,y,me(T/ue)*ue,w,R(.6,1.3),S()*fe,tt(so),.8),i(y,w,1.8,0,.25))}Fe(6);for(let b=0;b<9e3;b++){const y=ae+S()*be,w=ae+S()*be,T=pe(y,w);if(T<-7||T>6||Pt(y,w)<1.5||S()<.5)continue;const q=R(.6,2.4);s(6,y,me(T/ue)*ue+q*.15,w,q,S()*fe,0)}Fe(7);const C=[];for(let b=0;b<4e3&&C.length<368;b++){const y=ae+200+S()*(be-400),w=ae+200+S()*(be-400),T=pe(y,w);T>-6||T<-30||C.push(y,kt,w,R(.9,1.4),S()*fe,tt(Xn),S(),R(6,24))}const h=[],le=[[-120,90,380,110],[700,110,-600,160],[-800,80,700,120],[200,70,250,90],[-40,50,650,80],[-500,120,-880,140],[930,80,380,100]];for(const b of le){const y=5+(S()*5|0),w=(S()<.5?-1:1)*R(9,12),T=S()*fe,q=tt(Xn);for(let E=0;E<y;E++)h.push(b[0]+R(-5,5),b[1]+R(-4,4),b[2]+R(-5,5),b[3]+R(-6,6),T-E*.035*cc(w)+R(-.01,.01),S()<.8?q:tt(Xn),S(),w)}const J=[];for(let b=0;b<46;b++)J.push(ae+S()*be,R(170,300),ae+S()*be,R(9,19),S()*fe,ee(.98,.97,.95),S(),R(1.2,2.6));const f=[];for(const b of u)for(let y=0;y<14;y++)f.push(b[0]+R(-40,40),et(b[0],b[1])+4,b[1]+R(-40,40),R(.9,1.3),S()*fe,ee(1,R(.62,.78),R(.35,.45)),S(),R(2.2,3.4));for(let b=0;b<36;b++){const y=S()*fe,w=R(14,70),T=x[0]+ne(y)*w,q=x[1]+Y(y)*w;pe(T,q)>-2.5||f.push(T,kt,q,R(.5,.7),S()*fe,ee(1,R(.6,.72),.36),S(),0)}const G=b=>{let y=0;const w=new Uint32Array(e+1);for(let P=0;P<e;P++)w[P]=y,y+=b[P].length/8;w[e]=y;const T=new Float32Array(y*8),q=new Float32Array(e).fill(1e9),E=new Float32Array(e).fill(-1e9);let K=0;for(let P=0;P<e;P++){const V=b[P];for(let B=0;B<V.length;B+=8){for(let te=0;te<8;te++)T[K++]=V[B+te];q[P]=Ce(q[P],V[B+1]-2),E[P]=ve(E[P],V[B+1]+16*V[B+3])}}return{data:T,n:y,start:w,lo:q,hi:E}},U=new Uint8Array(c*c*4);for(let b=0;b<c*c;b++)U[b*4]=Ce(r[b*3],1)*255,U[b*4+1]=Ce(r[b*3+1],1)*255,U[b*4+2]=Ce(r[b*3+2],1)*255;const se=[[-220,-60],[700,-620],...u,x,k];for(const b of an.slice(0,11))se.push([b[0],b[1]]);return{stat:n.map(G),boats:new Float32Array(C),cranes:new Float32Array(h),clouds:new Float32Array(J),lanterns:new Float32Array(f),gm:U,GMN:c,pois:se,torii:x,pagoda:k,villages:u}}const cc=e=>e<0?-1:1,de=1/120,o=new Float64Array(64),ze=0,qe=1,Le=2,We=3,nt=4,bt=5,it=6,ln=7,fn=8,un=9,pn=10,dn=11,vn=12,Kn=13,mn=14,hn=15,gn=16,$n=17,zt=18,at=19,lt=20,Qn=21,Zn=22,Lt=23,ft=24,St=25,ut=26,Jn=27,jn=28,es=29,Et=30,Rt=31,Nt=32,Ft=33,Mt=34,bn=35,ts=36,ns=37,oo=38,co=39,ro=40,io=41,ao=42,lo=43,fo=44,uo=45,po=46,vo=47,ss=48;let Gt=1;const xn=()=>{Gt=Gt+1831565813|0;let e=Math.imul(Gt^Gt>>>15,1|Gt);return e=e+Math.imul(e^e>>>7,61|e)^e,((e^e>>>14)>>>0)/4294967296};let os=[];function mo(e){const t=Y(o[We]),n=ne(o[We]),s=o[it];let c=et(o[ze],o[Le]);for(let r=1;r<=8;r++){const i=r/8*e*s,a=et(o[ze]+t*i,o[Le]+n*i);a>c&&(c=a)}return c}function rc(e,t,n,s){o[ze]=o[ln]=e,o[qe]=o[fn]=t,o[Le]=o[un]=n,o[We]=o[pn]=s,o[nt]=o[dn]=o[bt]=o[vn]=0,o[it]=21,o[Ft]=s,o[Mt]=-.12,o[Et]=e-Y(s)*13,o[Rt]=t+3,o[Nt]=n-ne(s)*13,o[gn]=0}function yn(){const e=os.length;let t=0,n=0;for(let s=0;s<6;s++){const c=os[xn()*e|0];if(t=c[0]+(xn()-.5)*300,n=c[1]+(xn()-.5)*300,Pe(t-o[ze],n-o[Le])>350)break}o[mn]=t,o[hn]=n,o[gn]=45+xn()*45}function ho(e,t,n){o[ln]=o[ze],o[fn]=o[qe],o[un]=o[Le],o[pn]=o[We],o[dn]=o[nt],o[vn]=o[bt],o[$n]+=de;const s=o[it],c=mo(2.2)+7-o[qe];let r=t*.55;c>0&&(r=ve(r,Ce(c*.07,.65))),o[qe]>360&&(r=Ce(r,-(o[qe]-360)*.01));const i=Pe(o[ze],o[Le]);if(i>1250){const k=en(-o[ze],-o[Le]);e=ye(e-tn(o[We],k)*((i-1250)/140),-1,1)}o[bt]+=(e*.78-o[bt])*(1-Ae(-de*2.2));const a=-9.8*A0(o[bt])*.85/ve(s,8);o[We]+=a*de;const d=(r-o[nt])*(1-Ae(-de*1.7));o[nt]+=d,o[Kn]+=(_e(a)*s*.06+d/de*.5+n*.25-o[Kn])*(1-Ae(-de*4)),o[Lt]+=(n-o[Lt])*(1-Ae(-de*2));let l=-9.8*Y(o[nt])*.8+(21-s)*.3+o[Lt]*10,v=s+l*de;v=v<12?12:v>46?46:v,o[it]=v;const x=ne(o[nt]);o[ze]+=Y(o[We])*x*v*de,o[qe]+=Y(o[nt])*v*de,o[Le]+=ne(o[We])*x*v*de;const z=et(o[ze],o[Le])+2.4;o[qe]<z&&(o[qe]+=(z-o[qe])*.35)}let go=0,bo=0;function ic(){o[gn]-=de,(o[gn]<=0||Pe(o[mn]-o[ze],o[hn]-o[Le])<160)&&yn();const e=o[$n],t=en(o[mn]-o[ze],o[hn]-o[Le])+.9*(Hs(e*.021)-.5);go=ye(-tn(o[We],t)*1.3,-.62,.62),o[vo]=20+75*jt(Hs(e*.009+4.2),1.6);const n=ve(mo(4),kt)+o[vo],s=Y(o[nt])*o[it];bo=ye((n-o[qe])*.035-s*.09,-.55,.65)}function xo(e,t){const n=o[zt]/de;o[ft]=o[ln]+(o[ze]-o[ln])*n,o[St]=o[fn]+(o[qe]-o[fn])*n,o[ut]=o[un]+(o[Le]-o[un])*n,o[Jn]=o[pn]+tn(o[pn],o[We])*n,o[jn]=o[dn]+(o[nt]-o[dn])*n,o[es]=o[vn]+(o[bt]-o[vn])*n,o[ns]+=e;const s=o[ns],c=t?.5*Y(s*.041)+.3*Y(s*.017+1.3):0;o[ts]+=(c-o[ts])*(1-Ae(-e*.4));const r=1-Ae(-e*2.4);o[Ft]+=tn(o[Ft],o[Jn]+o[ts])*r;const i=t?.1*Y(s*.033+.6):0;o[Mt]+=(o[jn]*.45-.13-i-o[Mt])*r,o[bn]+=(o[es]*.22-o[bn])*(1-Ae(-e*3)),o[ss]+=(12.5+(o[it]-21)*.18+(t?2*Y(s*.027):0)-o[ss])*(1-Ae(-e*1.5));const a=ne(o[Mt]),d=o[ss];let l=o[ft]-Y(o[Ft])*a*d,v=o[St]-Y(o[Mt])*d+1.2,x=o[ut]-ne(o[Ft])*a*d;const z=1-Ae(-e*9);l=o[Et]+(l-o[Et])*z,v=o[Rt]+(v-o[Rt])*z,x=o[Nt]+(x-o[Nt])*z;let k=et(l,x);for(let b=0;b<4;b++)k=ve(k,et(l+((b&1)*2-1)*2,x+((b>>1)*2-1)*2));v<k+1.6&&(v=k+1.6),o[Et]=l,o[Rt]=v,o[Nt]=x;let D=o[ft]-l,u=o[St]-v,X=o[ut]-x;const M=ct(D*D+u*u+X*X);D/=M,u/=M,X/=M;let C=-X,h=D;const le=ct(C*C+h*h)||1;C/=le,h/=le;const J=-h*u,f=h*D-C*X,G=C*u,U=ne(o[bn]),se=Y(o[bn]);o[oo]=D,o[co]=u,o[ro]=X,o[io]=C*U-J*se,o[ao]=-f*se,o[lo]=h*U-G*se,o[fo]=J*U+C*se,o[uo]=f*U,o[po]=G*U+h*se}const Ge=e=>document.getElementById(e),He=Ge("c"),yo=Ge("i"),wn=document.body,wo=matchMedia("(orientation:portrait) and (pointer:coarse)");let Ao=0,cs;const qt=(e,t,n)=>{cs||(Ge("s").textContent=e);const s=Ge("b").animate({transform:[`scaleX(${Ao})`,`scaleX(${t})`]},{duration:n,fill:"forwards",easing:"cubic-bezier(.3,.5,.5,1)"});return Ao=t,new Promise(c=>{s.ready.then(()=>setTimeout(c)),setTimeout(c,document.hidden?0:1e3)})},To=e=>{throw new Error(e,{cause:1})};navigator.gpu||To("This page needs WebGPU. Try a current Chrome or Edge.");const rs=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});rs||To("No WebGPU adapter found."),Ge("w").hidden=!!navigator.userAgentData;const is=rs.features.has("timestamp-query"),F=await rs.requestDevice({requiredFeatures:is?["timestamp-query"]:[]});F.addEventListener("uncapturederror",e=>console.error("GPU: "+e.error.message)),F.lost.then(e=>{e.reason!=="destroyed"&&(we<2&&(pt("paperskies",we+1),location.reload()),cs=wn.className="l e",Ge("s").textContent="The graphics device was lost. Reload the page to try again.")});const ko=He.getContext("webgpu"),Po=navigator.gpu.getPreferredCanvasFormat(),Ye=F.queue,xt="rgba16float",Ut="depth32float",ge=GPUTextureUsage,ie=GPUBufferUsage,An=GPUShaderStage,Xe=e=>F.createShaderModule({code:e}),Ie=(e,t)=>{const n=F.createBuffer({size:ve(16,e.byteLength+3&-4),usage:t|ie.COPY_DST});return Ye.writeBuffer(n,0,e.buffer||e,e.byteOffset||0,e.byteLength),n},Ke=(e,t,n,s,c={})=>F.createTexture({size:[e,t],format:n,usage:s,mipLevelCount:c.mips||1,sampleCount:c.samples||1}),ac=F.createSampler({addressModeU:"repeat",addressModeV:"repeat",magFilter:"linear",minFilter:"linear",mipmapFilter:"linear",maxAnisotropy:we>1?1:8}),as=F.createSampler({magFilter:"linear",minFilter:"linear"}),lc=F.createSampler({compare:"less-equal",magFilter:"linear",minFilter:"linear"}),zo=Ke(Jt,Jt,Ut,ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING),fc=Ke(1,1,Ut,ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING),ls=Ke(W,W,"r32float",ge.TEXTURE_BINDING|ge.COPY_DST),Lo=Ke(W,W,"r16float",ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING),Tn=Ke(1024,1024,"rgba8unorm",ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING,{mips:11}),So=Ke(1024,1024,"rgba8unorm",ge.TEXTURE_BINDING|ge.COPY_DST),yt=new Float32Array(104),fs=F.createBuffer({size:yt.byteLength,usage:ie.UNIFORM|ie.COPY_DST}),kn=new Float32Array(4),Eo=F.createBuffer({size:16,usage:ie.UNIFORM|ie.COPY_DST}),st=An.VERTEX|An.FRAGMENT,Ro=F.createBindGroupLayout({entries:[{binding:0,visibility:st,buffer:{}},{binding:1,visibility:st,sampler:{}},{binding:2,visibility:st,sampler:{}},{binding:3,visibility:st,sampler:{type:"comparison"}},{binding:4,visibility:st,texture:{sampleType:"depth"}},{binding:5,visibility:st,texture:{sampleType:"unfilterable-float"}},{binding:6,visibility:st,texture:{}},{binding:7,visibility:st,texture:{}},{binding:8,visibility:st,texture:{}}]}),No=e=>F.createBindGroup({layout:Ro,entries:[{binding:0,resource:{buffer:fs}},{binding:1,resource:ac},{binding:2,resource:as},{binding:3,resource:lc},{binding:4,resource:e.createView()},{binding:5,resource:ls.createView()},{binding:6,resource:Lo.createView()},{binding:7,resource:Tn.createView()},{binding:8,resource:So.createView()}]}),uc=No(zo),pc=No(fc),qo=F.createPipelineLayout({bindGroupLayouts:[Ro]}),Io=F.createBindGroupLayout({entries:[{binding:0,visibility:An.FRAGMENT,texture:{}},{binding:1,visibility:An.FRAGMENT,sampler:{}}]}),dc=F.createPipelineLayout({bindGroupLayouts:[Io]}),Do=Xe(q0),vc={color:{srcFactor:"one",dstFactor:"one"},alpha:{srcFactor:"one",dstFactor:"one"}},Pn=(e,t,n)=>F.createRenderPipeline({layout:dc,vertex:{module:Do,entryPoint:"vs"},fragment:{module:Do,entryPoint:e,targets:[{format:t,blend:n?vc:void 0}]}}),us=e=>F.createBindGroup({layout:Io,entries:[{binding:0,resource:e},{binding:1,resource:as}]}),Vt=(e,t)=>({view:e,loadOp:t?"clear":"load",storeOp:"store",clearValue:[0,0,0,0]}),It=(e,t,n)=>({shaderLocation:e,offset:t,format:n}),mc={arrayStride:16,attributes:[It(0,0,"float32x3"),It(1,12,"snorm8x4")]},ps={arrayStride:16,attributes:[It(0,0,"float32x3"),It(1,12,"uint8x4")]},Bo={arrayStride:32,stepMode:"instance",attributes:[It(2,0,"float32x4"),It(3,16,"float32x4")]},Wt=(e,t,n,s,c={})=>F.createRenderPipeline({layout:qo,vertex:{module:e,entryPoint:t,buffers:s,constants:c.constants},fragment:{module:e,entryPoint:n,targets:[{format:xt,blend:c.blend}],constants:c.constants},primitive:{topology:c.strip?"triangle-strip":"triangle-list",cullMode:c.cull||"none"},depthStencil:{format:Ut,depthWriteEnabled:c.write??!c.blend,depthCompare:c.cmp||"greater"},multisample:{count:dt}}),hc=(e,t,n,s={})=>F.createRenderPipeline({layout:qo,vertex:{module:e,entryPoint:t,buffers:n,constants:s.constants},primitive:{topology:"triangle-list",cullMode:"none"},depthStencil:{format:Ut,depthWriteEnabled:!0,depthCompare:"less",depthBias:2,depthBiasSlopeScale:1.5}});await qt("Folding paper\u2026",.05,300);const gc=Xe(O0),Oo=Xe(_0),bc=Xe(D0),xc=Xe(B0),yc=Xe(C0),wc=Wt(gc,"vs","fs",[mc],{cull:"back"}),Ac=Wt(bc,"vs","fs",[],{cmp:"greater-equal",write:!1}),Tc=Wt(xc,"vs","fs",[ps]),kc=Wt(yc,"vs","fs",[],{strip:!0,blend:{color:{srcFactor:"one",dstFactor:"one-minus-src-alpha"},alpha:{srcFactor:"one",dstFactor:"one-minus-src-alpha"}},write:!0}),Dt=[0,1,2,3,4,5].map(e=>Wt(Oo,"vs","fs",[ps,Bo],{constants:{KIND:e}})),zn=[0,1,2,3,4,5].map(e=>hc(Oo,"vsSh",[ps,Bo],{constants:{KIND:e}})),Co=Xe(I0),ds=F.createRenderPipeline({layout:"auto",vertex:{module:Co,entryPoint:"vs"},fragment:{module:Co,entryPoint:"fs",targets:[{format:"r16float"}]}}),_o=F.createBindGroup({layout:ds.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:Eo}},{binding:1,resource:ls.createView()}]}),Pc=Pn("fsMip","rgba8unorm"),zc=Pn("fsDown0",xt),Lc=Pn("fsDown",xt),Sc=Pn("fsUp",xt,!0),Fo=Xe(F0),Mo=F.createRenderPipeline({layout:"auto",vertex:{module:Fo,entryPoint:"vs"},fragment:{module:Fo,entryPoint:"fs",targets:[{format:Po}]}});await qt("Shaping the islands\u2026",.15,600),pt("paperskiesLoad",1),addEventListener("pagehide",()=>pt("paperskiesLoad",""));{const e=Xe(R0),t=F.createComputePipeline({layout:"auto",compute:{module:e,entryPoint:"main"}}),n=W*W*4,s=new ArrayBuffer(16);new Uint32Array(s,0,2).set([W,an.length]),new Float32Array(s,8,2).set([vt,ae]);const c=Ie(new Uint8Array(s),ie.UNIFORM),r=Ie(M0(),ie.STORAGE),i=F.createBuffer({size:n,usage:ie.STORAGE|ie.COPY_SRC}),a=F.createBuffer({size:n,usage:ie.MAP_READ|ie.COPY_DST}),d=F.createBindGroup({layout:t.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:c}},{binding:1,resource:{buffer:i}},{binding:2,resource:{buffer:r}}]}),l=F.createCommandEncoder(),v=l.beginComputePass();v.setPipeline(t),v.setBindGroup(0,d),v.dispatchWorkgroups(W/8,W/8),v.end(),l.copyBufferToBuffer(i,0,a,0,n),Ye.submit([l.finish()]),await a.mapAsync(GPUMapMode.READ),Te=new Float32Array(a.getMappedRange().slice(0)),a.unmap(),a.destroy(),i.destroy()}Ye.writeTexture({texture:ls},Te,{bytesPerRow:W*4},[W,W]),await qt("Stacking the paper\u2026",.35,1500);const vs=U0(),Ec=Ie(new Uint8Array(vs.vb),ie.VERTEX),Rc=Ie(vs.ib,ie.INDEX);await qt("Planting the trees\u2026",.7,1200);const Re=oc();os=Re.pois,await qt("Folding cranes\u2026",.9,600);const O=[eo(0),to(0),V0(),W0(),H0(),Y0(),Q0(),eo(1),to(1),X0(),K0(),no(0),no(1),$0(),Z0(),J0(),j0()].map(e=>e.build());let ms=0,hs=0;for(const e of O)e.v0=ms,e.i0=hs,ms+=e.nv,hs+=e.ib.length;const Go=new Uint8Array(ms*16),Uo=new Uint32Array(hs);for(const e of O)Go.set(new Uint8Array(e.vb),e.v0*16),Uo.set(e.ib,e.i0);const Vo=Ie(Go,ie.VERTEX),Wo=Ie(Uo,ie.INDEX),Ho=Re.stat.map(e=>Ie(e.data,ie.VERTEX)),Yo=Ie(Re.boats,ie.VERTEX),Xo=Ie(Re.cranes,ie.VERTEX),Nc=Ie(Re.clouds,ie.VERTEX),qc=Ie(Re.lanterns,ie.VERTEX),Ic=ee(.85,.37,.29),Ko=Ie(new Float32Array([0,0,0,1,0,Ic,.5,0]),ie.VERTEX),$o=Re.boats.length/8,Qo=Re.cranes.length/8,Ln=Re.clouds.length/8,Dc=Re.lanterns.length/8;Ye.writeTexture({texture:So},Re.gm,{bytesPerRow:1024*4},[1024,1024]);{const e=Xe(N0),t=F.createRenderPipeline({layout:"auto",vertex:{module:e,entryPoint:"vs"},fragment:{module:e,entryPoint:"fs",targets:[{format:"rgba8unorm"}]}}),n=F.createCommandEncoder();let s=n.beginRenderPass({colorAttachments:[Vt(Tn.createView({baseMipLevel:0,mipLevelCount:1}),!0)]});s.setPipeline(t),s.draw(3),s.end();for(let c=1;c<11;c++)s=n.beginRenderPass({colorAttachments:[Vt(Tn.createView({baseMipLevel:c,mipLevelCount:1}),!0)]}),s.setPipeline(Pc),s.setBindGroup(0,us(Tn.createView({baseMipLevel:c-1,mipLevelCount:1}))),s.draw(3),s.end();Ye.submit([n.finish()])}const Zo=2560*1440,Jo=Ze?25e4:5e5;let De=0,Ue=0,Ht=0,Sn=0,$e=+Ct[1]||(we>1?41e4:Ze?1280*720:Zo),En=0,wt=0,Rn=0,Yt=0,gs=0,bs=0,xs=3,jo,Nn,e0,Xt=[],qn=[],ys=[];const In=6;function ws(){Ht=ve(2,xe(He.clientWidth*devicePixelRatio)),Sn=ve(2,xe(He.clientHeight*devicePixelRatio));const e=Ce(1,ct($e/(Ht*Sn))),t=ve(2,xe(Ht*e)&-2),n=ve(2,xe(Sn*e)&-2);if(t===De&&n===Ue)return;En=Rn=Yt=0,wt=-300,De=t,Ue=n,He.width=De,He.height=Ue,ko.configure({device:F,format:Po,alphaMode:"opaque"});for(const l of ys)l.destroy();const s=Ke(dt>1?De:1,Ue,xt,ge.RENDER_ATTACHMENT,{samples:dt}),c=Ke(De,Ue,Ut,ge.RENDER_ATTACHMENT,{samples:dt}),r=Ke(De,Ue,xt,ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING);ys=[s,c,r];const i=[];for(let l=0;l<In;l++){const v=Ke(ve(1,De>>l+1),ve(1,Ue>>l+1),xt,ge.RENDER_ATTACHMENT|ge.TEXTURE_BINDING);i.push(v),ys.push(v)}const a=r.createView(),d=i.map(l=>l.createView());jo={colorAttachments:[{view:dt>1?s.createView():a,resolveTarget:dt>1?a:void 0,loadOp:"clear",storeOp:dt>1?"discard":"store",clearValue:[0,0,0,1]}],depthStencilAttachment:{view:c.createView(),depthClearValue:0,depthLoadOp:"clear",depthStoreOp:"discard"}},Nn={colorAttachments:[{view:null,loadOp:"clear",storeOp:"store",clearValue:[0,0,0,1]}]},e0=F.createBindGroup({layout:Mo.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:fs}},{binding:1,resource:as},{binding:2,resource:a},{binding:3,resource:d[0]}]}),Xt=[],qn=[];for(let l=0;l<In;l++)Xt.push({colorAttachments:[Vt(d[l],!0)]}),qn.push(us(l?d[l-1]:a));for(let l=In-1;l>0;l--)Xt.push({colorAttachments:[Vt(d[l-1],!1)]}),qn.push(us(d[l]));yt[80]=De,yt[81]=Ue,yt[82]=1/De,yt[83]=1/Ue}ws(),addEventListener("resize",ws);const Bc={colorAttachments:[],depthStencilAttachment:{view:zo.createView(),depthClearValue:1,depthLoadOp:"clear",depthStoreOp:"store"}},As={colorAttachments:[Vt(Lo.createView(),!1)]},ot=we>1?8:16;let Ts=0,Dn,ks;const Bn=[];let t0,n0;const Se=new Float64Array(16),Ps=0,s0=1,On=2,Kt=3;if(is){Dn=F.createQuerySet({type:"timestamp",count:2}),ks=F.createBuffer({size:16,usage:ie.QUERY_RESOLVE|ie.COPY_SRC});for(let e=0;e<6;e++){const t=F.createBuffer({size:16,usage:ie.MAP_READ|ie.COPY_DST}),n={b:t,busy:!1,done:null};n.done=()=>{const s=new BigInt64Array(t.getMappedRange()),c=Number(s[1]-s[0])/1e6;Se[s0]=c,t.unmap(),n.busy=!1,wt>0&&c>0&&c<1e3&&(Rn+=c,Yt++)},Bn.push(n)}t0={querySet:Dn,beginningOfPassWriteIndex:0},n0={querySet:Dn,endOfPassWriteIndex:1}}const o0=.1;let Be=.5;const ke=new Float64Array(12),Cn=new Uint8Array(_);function _n(e,t,n,s,c,r){const i=o[Et],a=o[Rt],d=o[Nt],l=s*s,v=c*c,x=je*.5+r;for(let z=0;z<_;z++){const k=Cn[z],D=k*_,u=ae+(k+.5)*je-d,X=ve(_e(u)-x,0);let M=-1;for(let C=0;C<=_;C++){const h=D+C;let le=!1;if(C<_){const J=t.lo[h],f=t.hi[h];if(J<=f){const G=ae+(C+.5)*je-i,U=ve(_e(G)-x,0),se=U*U+X*X;if(se<v&&se>=l){const b=(J+f)*.5-a,y=(f-J)*.5+r;le=!0;for(let w=0;w<12&&le;w+=3){const T=ke[w],q=ke[w+1],E=ke[w+2];le=G*T+b*q+u*E+x*_e(T)+y*_e(q)+x*_e(E)>=0}}}}if(le)M<0&&(M=h);else if(M>=0){const J=t.start[M],f=t.start[h]-J;f>0&&(n?e.drawIndexed(n.ib.length,f,n.i0,n.v0,J):e.drawIndexed(f,1,J,0,0)),M=-1}}}}function Oc(e,t,n,s){const c=o[ft],r=o[ut],i=je*.5+8;for(let a=0;a<_;a++){const d=ve(_e(ae+(a+.5)*je-r)-i,0);if(d>s)continue;let l=-1;for(let v=0;v<=_;v++){const x=a*_+v;if(v<_&&t.lo[x]<=t.hi[x]&&Pe(ve(_e(ae+(v+.5)*je-c)-i,0),d)<s)l<0&&(l=x);else if(l>=0){const k=t.start[l],D=t.start[x]-k;D>0&&e.drawIndexed(n.ib.length,D,n.i0,n.v0,k),l=-1}}}}const c0=[null],r0=64;let Ne=!0,Ve=!0,Fn=0,zs=!1,Cc=!1;function i0(){const e=o[Et],t=o[Rt],n=o[Nt],s=o[oo],c=o[co],r=o[ro],i=o[io],a=o[ao],d=o[lo],l=o[fo],v=o[uo],x=o[po];Be=.5+o[Lt]*.05;const z=De/Ue,k=1/(Be*z),D=1/Be,u=yt;u[0]=i*k,u[4]=a*k,u[8]=d*k,u[12]=-(i*e+a*t+d*n)*k,u[1]=l*D,u[5]=v*D,u[9]=x*D,u[13]=-(l*e+v*t+x*n)*D,u[2]=0,u[6]=0,u[10]=0,u[14]=o0,u[3]=s,u[7]=c,u[11]=r,u[15]=-(s*e+c*t+r*n),u[32]=e,u[33]=t,u[34]=n,u[35]=o[$n],u[36]=i,u[37]=a,u[38]=d,u[39]=Be*z,u[40]=l,u[41]=v,u[42]=x,u[43]=Be,u[44]=s,u[45]=c,u[46]=r,u[47]=o0;const X=Be*z;ke[0]=s*X-i,ke[1]=c*X-a,ke[2]=r*X-d,ke[3]=s*X+i,ke[4]=c*X+a,ke[5]=r*X+d,ke[6]=s*Be-l,ke[7]=c*Be-v,ke[8]=r*Be-x,ke[9]=s*Be+l,ke[10]=c*Be+v,ke[11]=r*Be+x,Zs(Se[Kt]);for(let f=0;f<4;f++)u[48+f]=I[Me+f],u[56+f]=I[on+f],u[60+f]=I[Hn+f];for(let f=0;f<3;f++)u[52+f]=I[ht+f],u[64+f]=I[Xs+f],u[68+f]=I[z0+f],u[72+f]=I[L0+f],u[76+f]=I[S0+f];u[55]=I[Yn],u[67]=I[$s],u[71]=I[Ks],u[75]=I[cn];{const f=I[Me],G=I[Me+1],U=I[Me+2];let se=-U,b=f;const y=Pe(se,b)||1;se/=y,b/=y;const w=-b*G,T=b*f-se*U,q=se*G,E=r0,K=2*E/Jt,P=xe((se*o[ft]+b*o[ut])/K)*K,V=xe((w*o[ft]+T*o[St]+q*o[ut])/K)*K,B=f*o[ft]+G*o[St]+U*o[ut],te=600;u[16]=se/E,u[20]=0,u[24]=b/E,u[28]=-P/E,u[17]=w/E,u[21]=T/E,u[25]=q/E,u[29]=-V/E,u[18]=-f/te,u[22]=-G/te,u[26]=-U/te,u[30]=B/te+.5,u[19]=0,u[23]=0,u[27]=0,u[31]=1}{const f=o[Jn],G=o[jn],U=o[es],se=ne(G),b=Y(f)*se,y=Y(G),w=ne(f)*se;let T=-w,q=b;const E=Pe(T,q)||1;T/=E,q/=E;const K=-q*y,P=q*b-T*w,V=T*y,B=ne(U),te=Y(U);u[84]=T*B-K*te,u[85]=-P*te,u[86]=q*B-V*te,u[87]=.05+o[Kn]*.12,u[88]=K*B+T*te,u[89]=P*B,u[90]=V*B+q*te,u[91]=o[it]/21,u[92]=b,u[93]=y,u[94]=w,u[95]=1.7,u[96]=o[ft],u[97]=o[St],u[98]=o[ut],u[99]=o[Lt]}Ye.writeBuffer(fs,0,yt);{let f=I[Me],G=I[Me+2];const U=Pe(f,G)||1;f/=U,G/=U,kn[0]=f,kn[1]=G,kn[2]=ve(I[Me+1],.12)/U*vt,Ye.writeBuffer(Eo,0,kn)}{let f=me((n-ae)/je)|0;f=f<0?0:f>_-1?_-1:f;let G=0;Cn[G++]=f;for(let U=1;U<_;U++)f-U>=0&&(Cn[G++]=f-U),f+U<_&&(Cn[G++]=f+U)}const M=F.createCommandEncoder();let C=null;if(is){for(let f=0;f<Bn.length;f++)if(!Bn[f].busy){C=Bn[f];break}}As.timestampWrites=C?t0:void 0,Nn.timestampWrites=C?n0:void 0;let h=M.beginRenderPass(As);h.setPipeline(ds),h.setBindGroup(0,_o);const le=Fn?4:1;for(let f=0;f<le;f++){const G=Ts*W/ot;h.setViewport(0,G,W,W/ot,0,1),h.setScissorRect(0,G,W,W/ot),h.draw(3),Ts=(Ts+1)%ot}h.end(),h=M.beginRenderPass(Bc),h.setBindGroup(0,pc),h.setVertexBuffer(0,Vo),h.setIndexBuffer(Wo,"uint32"),h.setPipeline(zn[0]);for(let f=0;f<7;f++)f===2||f===6||(h.setVertexBuffer(1,Ho[f]),Oc(h,Re.stat[f],O[f],r0+20));h.setPipeline(zn[1]),h.setVertexBuffer(1,Xo),h.drawIndexed(O[10].ib.length,Qo,O[10].i0,O[10].v0,0),h.setPipeline(zn[2]),h.setVertexBuffer(1,Yo),h.drawIndexed(O[9].ib.length,$o,O[9].i0,O[9].v0,0),h.setPipeline(zn[5]),h.setVertexBuffer(1,Ko),h.drawIndexed(O[14].ib.length,1,O[14].i0,O[14].v0,0),h.end(),h=M.beginRenderPass(jo),h.setBindGroup(0,uc),h.setPipeline(wc),h.setVertexBuffer(0,Ec),h.setIndexBuffer(Rc,"uint32"),_n(h,vs,null,0,1e9,2),h.setPipeline(Dt[0]),h.setVertexBuffer(0,Vo),h.setIndexBuffer(Wo,"uint32");const J=1;for(let f=0;f<7;f++){h.setVertexBuffer(1,Ho[f]);const G=Re.stat[f];f<2?(_n(h,G,O[f],0,280*J,16),_n(h,G,O[7+f],280*J,1500*J,16)):_n(h,G,O[f],0,(f===2?500:f===6?700:2400)*J,16)}h.setPipeline(Dt[1]),h.setVertexBuffer(1,Xo),h.drawIndexed(O[10].ib.length,Qo,O[10].i0,O[10].v0,0),h.setPipeline(Dt[2]),h.setVertexBuffer(1,Yo),h.drawIndexed(O[9].ib.length,$o,O[9].i0,O[9].v0,0),h.setPipeline(Dt[3]),h.setVertexBuffer(1,Nc),h.drawIndexed(O[11].ib.length,Ln>>1,O[11].i0,O[11].v0,0),h.drawIndexed(O[12].ib.length,Ln-(Ln>>1),O[12].i0,O[12].v0,Ln>>1),h.setPipeline(Dt[5]),h.setVertexBuffer(1,Ko),h.drawIndexed(O[14].ib.length,1,O[14].i0,O[14].v0,0),h.setPipeline(Tc),h.drawIndexed(O[15].ib.length,1,O[15].i0,O[15].v0,0),h.drawIndexed(O[16].ib.length,1,O[16].i0,O[16].v0,0),h.setPipeline(Ac),h.draw(3),h.setPipeline(kc),h.draw(4),h.setPipeline(Dt[4]),h.setVertexBuffer(1,qc),h.drawIndexed(O[13].ib.length,Dc,O[13].i0,O[13].v0,0),h.end();for(let f=0;f<Xt.length;f++)h=M.beginRenderPass(Xt[f]),h.setPipeline(f===0?zc:f<In?Lc:Sc),h.setBindGroup(0,qn[f]),h.draw(3),h.end();Nn.colorAttachments[0].view=ko.getCurrentTexture().createView(),h=M.beginRenderPass(Nn),h.setPipeline(Mo),h.setBindGroup(0,e0),h.draw(3),h.end(),C&&(M.resolveQuerySet(Dn,0,2,ks,0),M.copyBufferToBuffer(ks,0,C.b,0,16)),c0[0]=M.finish(),Ye.submit(c0),C&&(C.busy=!0,C.b.mapAsync(GPUMapMode.READ).then(C.done))}function _c(){for(let e=0;e<ot;e++){const t=F.createCommandEncoder(),n=t.beginRenderPass(As);n.setPipeline(ds),n.setBindGroup(0,_o),n.setViewport(0,e*W/ot,W,W/ot,0,1),n.setScissorRect(0,e*W/ot,W,W/ot),n.draw(3),n.end(),Ye.submit([t.finish()])}}let Ls=0,Ss=0,Es=0,Rs=0,Ns=0,qs=0,Is=0,Fc=!1,$t=-1,Bt=0,a0=0,l0=0,f0=0,u0=0,Ds=0,Mn=0,Gn=1e9,Bs=1e9,Os=0,Cs=0;function p0(){if(Ne||Ve){ic(),ho(go,bo,0);return}o[at]*=Ae(-de*1.1),o[lt]*=Ae(-de*1.1);const e=1-Ae(-de*4);o[Qn]+=(Rs-Es-o[Qn])*e,o[Zn]+=(Ls-Ss-o[Zn])*e;const t=ye(o[at]+o[Qn],-1,1),n=ye(o[lt]+o[Zn],-1,1)*(Fc?-1:1);ho(t,n,Ns||Bt>1?1:0)}function d0(e){requestAnimationFrame(d0);const t=e-Se[Ps];Se[Ps]=e;let n=t/1e3;if(n>.1&&(n=.1),t<1e3&&(wt+=t,wt>0&&En++),t<1e3&&wt>(Ve?400:1e3)){const s=wt/En,c=Yt?Rn/Yt:0;let r=1;c?(c>13.6||c<9.8)&&(r=11.7/c):s>17.6?(bs=0,++gs>1&&(r=15/s,gs=0,xs=Ce(xs*2,60))):(gs=0,s<12.5?r=15/s:++bs>xs&&(r=1.17,bs=0)),r=r<.5?.5:r>1.7?1.7:r;const i=Ce(Zo,Ht*Sn),a=$e;$e*=r,$e=$e<Jo?Jo:$e>i?i:$e,a!==$e&&pt("paperskies",[we,$e<i?$e|0:""]),En=wt=Rn=Yt=0,ws()}if(Cc&&(n=0),Se[Kt]+=n*fe*E0(Se[Kt])*(Fn?24:1)/k0,$t>=0){const s=4/(innerWidth<innerHeight?innerWidth:innerHeight);o[at]=ye((f0-a0)*s,-1,1),o[lt]=ye(-(u0-l0)*s,-1,1)}o[at]=ye(o[at]+qs*.004,-1,1),o[lt]=ye(o[lt]-Is*.004,-1,1),qs=Is=0,o[zt]+=n;for(let s=0;o[zt]>=de&&s<14;s++)p0(),o[zt]-=de;o[zt]>=de&&(o[zt]=0),xo(n,Ne||Ve),i0(),zs&&(Ds++,t>Mn&&(Mn=t),t<Gn&&(Gn=t),t>Bs*1.5&&(Os++,Cs++),Se[On]+=t/1e3,Se[On]>.5&&(yo.textContent=`${(Ds/Se[On]).toFixed(0)} fps  \xB7  worst frame ${Mn.toFixed(1)} ms  \xB7  late frames ${Os} (total ${Cs})  \xB7  GPU ${Se[s0].toFixed(2)} ms  \xB7  ${De}x${Ue} (${De*100/Ht|0}%)`,Se[On]=0,Bs=Gn,Ds=0,Mn=0,Gn=1e9,Os=0))}const _s=Ge("t");let v0=0;const m0=e=>{_s.textContent=e,_s.className="on",clearTimeout(v0),v0=setTimeout(()=>_s.className="",1600)};let Qt=!1;const Fs=(e,t)=>{Ne!==!e&&(Ne=!e,o[at]=o[lt]=0,Ne&&yn(),t||m0(e?"Fly":"Autopilot"),!Ze&&!Ve&&(Qt=!0,e?Ms():document.exitPointerLock(),setTimeout(()=>Qt=!1,300)))},Mc=["KeyW","KeyA","KeyS","KeyD","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"],h0=(e,t)=>{switch(e.code){case"KeyW":case"ArrowUp":Ls=t;break;case"KeyS":case"ArrowDown":Ss=t;break;case"KeyA":case"ArrowLeft":Es=t;break;case"KeyD":case"ArrowRight":Rs=t;break;case"ShiftLeft":case"ShiftRight":Ns=t;break;case"KeyT":Fn=t;break;default:t&&!e.repeat&&(e.code==="KeyH"?(zs=!zs,Cs=0,Bs=1e9,yo.textContent=""):e.code==="KeyM"?Vc():e.code==="Escape"?Zt(!0):e.code==="Tab"&&Fs(Ne))}t&&Ne&&!Ve&&Mc.includes(e.code)&&Fs(!0)};addEventListener("keydown",e=>{e.code==="Tab"&&e.preventDefault(),!(Ve&&e.code!=="KeyH"&&e.code!=="KeyM")&&(Un(),h0(e,1))}),addEventListener("keyup",e=>h0(e,0));const g0=()=>{Ls=Ss=Es=Rs=Ns=Fn=0,$t=-1,Bt=0},Ms=()=>{Un();const e=He.requestPointerLock({unadjustedMovement:!0});e?.catch&&e.catch(()=>He.requestPointerLock()).catch(()=>0)};He.addEventListener("click",()=>{Ne||Ms()}),addEventListener("mousemove",e=>{document.pointerLockElement===He&&(qs+=e.movementX,Is+=e.movementY)}),addEventListener("blur",g0);const Gc=e=>{e.preventDefault(),Un(),Bt=e.touches.length,Ne&&Bt&&!Ve&&Fs(!0);let t=null,n=!1;for(let s=0;s<Bt;s++)e.touches[s].identifier===$t&&(t=e.touches[s]);if(t||($t=-1,Bt?(t=e.touches[0],$t=t.identifier,n=!0):o[at]=o[lt]=0),t){const s=wo.matches?t.clientY:t.clientX,c=wo.matches?-t.clientX:t.clientY;n&&(a0=s,l0=c),f0=s,u0=c}};for(const e of["touchstart","touchmove","touchend","touchcancel"])He.addEventListener(e,Gc,{passive:!1});const b0=Ge("fly"),Zt=e=>{cs||(Ve=e,wn.className=e?"m":document.pointerLockElement?"g p":"g",e?(g0(),document.pointerLockElement&&(Qt=!0,document.exitPointerLock(),setTimeout(()=>Qt=!1,300)),setTimeout(()=>Ve&&b0.focus(),100)):document.activeElement.blur())},x0=e=>{Un(),Zt(!1),Ne===e&&(Ne=!e,o[at]=o[lt]=0,Ne&&yn()),m0(e?"Fly":"Autopilot"),Ze?document.documentElement.requestFullscreen?.()?.then(()=>screen.orientation.lock("landscape")).catch(()=>0):e&&Ms()};b0.onclick=()=>x0(!0),Ge("auto").onclick=()=>x0(!1),Ge("o").onclick=()=>Zt(!0),Ge("q").querySelectorAll("button").forEach((e,t)=>{t===2-we?e.className="on":e.onclick=()=>{pt("paperskies",2-t),location.reload()}}),document.addEventListener("pointerlockchange",()=>{document.pointerLockElement?wn.className="g p":!Qt&&!Ne&&!Ve?Zt(!0):Ve||(wn.className="g")}),Se[Kt]=2.55,rc(-60,48,900,en(-160,-940)),yn(),o[mn]=-220,o[hn]=-60,o[ns]=0;for(let e=0;e<240;e++)p0(),xo(de,!0);await qt("Letting the light in\u2026",1,400),Zs(Se[Kt]),i0(),_c(),await Ye.onSubmittedWorkDone(),setTimeout(pt,15e3,"paperskiesLoad",""),Zt(!0),requestAnimationFrame(e=>{Se[Ps]=e,requestAnimationFrame(d0)});let Qe,y0,Gs=!1;const w0=.7;function Uc(e){const t=e.sampleRate,n=(m,p,...A)=>{const g=new m(e,p);for(const L of A)g.connect(L);return g.start&&g.start(),g},s=(m,...p)=>n(GainNode,{gain:m},...p),c=(m,p,A,...g)=>n(BiquadFilterNode,{type:m,frequency:p,Q:A},...g),r=(m,p,A)=>n(OscillatorNode,{frequency:m},s(p,A)),i=(m,p)=>{const A=t*m|0,g=new AudioBuffer({length:A,numberOfChannels:2,sampleRate:t});return p(g.getChannelData(0),A),p(g.getChannelData(1),A),g},a=i(11,(m,p)=>{for(let A=0,g=0;A<p+4096;A++)if(g=(g+.02*(S()*2-1))/1.02,A<p)m[A]=g*3.5;else{const L=(A-p)/4096;m[A-p]=m[A-p]*L+g*3.5*(1-L)}}),d=i(6,(m,p)=>{for(let A=0,g=0;A<p;A++){const L=A/t;g+=(S()*2-1-g)*(.03+.4*Ae(-L*2)),m[A]=g*(1-Ae(-L*40))*Ae(-L*1.1)*(1-A/p)}}),l=n(DynamicsCompressorNode,{threshold:-8,knee:8,ratio:12,attack:.005,release:.4},e.destination),v=y0=s(0,l),x=n(ConvolverNode,{buffer:d},v),z=(m,...p)=>n(AudioBufferSourceNode,{buffer:a,loop:!0,playbackRate:m},...p),k=s(0,v),D=c("lowpass",400,.6,k);z(.8,D);const u=s(0,v),X=c("bandpass",1800,1.4,u);z(2.3,X);const M=s(0,v,s(.4,x)),C=s(.6,M);z(.55,c("lowpass",520,.5,C)),r(.07,.35,C.gain),r(.031,.2,C.gain);const h=c("lowpass",900,.4,v,s(1.3,x)),le=s(1,h);[73.42,110,146.83,220,329.63].forEach((m,p)=>{const A=s(.02-p*.0025,le);r(.03+p*.011,.008,A.gain),n(OscillatorNode,{frequency:m},A),n(OscillatorNode,{frequency:m+R(.04,.12)},A)});const J=(m,p,A,g="sine",L=0)=>Array.from({length:m},()=>{const N=n(StereoPannerNode,{},v,s(A,x)),Q=L?c("lowpass",L,.7,N):N;return{p:N,os:Array.from({length:p},()=>{const oe=s(0,Q);return{g:oe,o:n(OscillatorNode,{type:g},oe)}})}}),f=(m,p,A,g,L,N,Q,oe,re)=>{const H=m.shift();m.push(H),H.p.pan.setValueAtTime(re,p),H.os.forEach((Z,j)=>{const ce=Z.g.gain;Z.o.frequency.setValueAtTime(A*g[j],p),ce.cancelScheduledValues(p),ce.setValueAtTime(0,p),ce.linearRampToValueAtTime(Q*L[j],p+.004+j*.002),ce.setTargetAtTime(0,p+.01,oe*N[j]/4)})},G=J(4,3,1),U=J(2,3,1.4),se=J(4,2,.8,"triangle",1600),b=J(2,1,.5),y=s(0,v,s(.3,x)),w=s(0,y);n(OscillatorNode,{frequency:4400},w),r(23,.5,w.gain);const T=[0,2,5,7,9,12,14,17,19,21,24],q=293.66;let E=e.currentTime,K=E+4,P=E+14,V=E+9,B=E+6,te=I[cn];return v.gain.setTargetAtTime(w0,E,2),()=>{const m=e.currentTime,p=m+.05;if(m-E<=0)return;E=m;const g=o[it],L=o[qe]-et(o[ze],o[Le]),N=ye((g-10)/30,0,1);k.gain.setTargetAtTime(.05+.22*N*N,p,.5),D.frequency.setTargetAtTime(260+900*N,p,.5),u.gain.setTargetAtTime(.03*ye(_e(o[bt])*1.6+o[Lt]*.8,0,1),p,.3);const Q=pe(o[ze],o[Le])<-1?1:.35;M.gain.setTargetAtTime(.06+.3*Q*he(120,8,L),p,1);const oe=I[Yn],re=I[cn];if(h.frequency.setTargetAtTime(500+700*he(-.2,.3,re),p,2),y.gain.setTargetAtTime(.012*oe*he(90,20,L)*(Q<1?1:.3),p,2),w.gain.setTargetAtTime(.5+.5*Y(m*.7),p,.5),p>K){let Z=p;for(let j=1+(S()*3|0);j--;){const ce=q*4*jt(2,T[S()*7|0]/12);f(G,Z,ce,[1,2.76,5.4],[1,.4,.18],[1,.5,.3],R(.012,.024),R(3,5),R(-.6,.6)),Z+=R(.12,.5)}K=Z+R(7,18)}if(p>P){let Z=2+(S()*5|0);const j=S()<.5?1:-1;let ce=p;for(let Ot=3+(S()*3|0);Ot--;)f(se,ce,q*jt(2,T[ye(Z,0,10)]/12),[1,2],[1,.25],[1,.4],R(.03,.05),2.4,R(-.4,.4)),Z+=j*(1+(S()<.3)),ce+=R(.35,.8);P=ce+R(22,48)}const H=te>.02!=re>.02;if(te=re,p>V||H){const Z=S()<.5?146.83:110;f(U,p,Z,[1,2.71,5.15],[1,.55,.25],[1,.6,.35],.07,12,R(-.3,.3)),V=p+R(70,130)}if(p>B){if(re>.08&&Q<1&&L<120){let Z=p;for(let j=2+(S()*4|0);j--;){const ce=R(2600,4200),Ot=b[0];f(b,Z,ce,[1],[1],[1],.012,.16,R(-.8,.8)),Ot.os[0].o.frequency.setValueAtTime(ce*.8,Z),Ot.os[0].o.frequency.exponentialRampToValueAtTime(ce*1.25,Z+.06),Ot.os[0].o.frequency.exponentialRampToValueAtTime(ce*.9,Z+.12),Z+=R(.12,.3)}}B=p+R(5,14)}}}function Un(){Qe||(Qe=new AudioContext({latencyHint:"playback"}),setInterval(Uc(Qe),100)),Qe.state==="suspended"&&!document.hidden&&Qe.resume()}function Vc(){Qe&&(Gs=!Gs,y0.gain.setTargetAtTime(Gs?0:w0,Qe.currentTime,.1))}document.addEventListener("visibilitychange",()=>{Qe&&(document.hidden?Qe.suspend():Qe.resume())})})().catch(Ze=>{console.error(Ze),document.body.className="l e",document.getElementById("s").textContent=(Ze.cause?"":"Failed to start: ")+Ze.message});</script></body></html>

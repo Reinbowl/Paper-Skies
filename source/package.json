@@ -1,0 +1,17 @@
+{
+  "name": "paper-skies",
+  "private": true,
+  "description": "A procedural origami world with a paper plane, rendered with WebGPU, bundled into one HTML file",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:readable": "node build.mjs --readable",
+    "build:dev": "node build.mjs --dev",
+    "format": "biome format --write src build.mjs tools",
+    "lint": "biome lint src build.mjs tools"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "esbuild": "^0.28.2"
+  }
+}
