@@ -30,6 +30,13 @@ The camera always keeps the plane in the middle of the screen.
 - **Day and night**: a pleated paper sun crosses the sky and sets into the sea as a crescent moon rises; folded stars come out, and lanterns drift up over the villages and float on the bay
 - **A quiet soundscape** made up as you listen: wind over the wings, the sea below, a slow pentatonic drone, wind chimes, a few plucked notes, a singing bowl at dawn and dusk, birds by day and crickets by night
 
+| | |
+|---|---|
+| ![Golden hour among the karst pillars](.github/screenshots/karst.jpg) | ![Lanterns rising over the village at night](.github/screenshots/night.jpg) |
+| ![The pagoda on its hill](.github/screenshots/pagoda.jpg) | ![The mountain's stacked sheets](.github/screenshots/mountain.jpg) |
+
+![The islands from high above](.github/screenshots/overview.jpg)
+
 ## Controls
 
 | | Keyboard & mouse |
@@ -63,7 +70,7 @@ If loading crashes the tab or the graphics driver gives up, the page starts agai
 - Shadows of the land come from a height map that is re-traced toward the sun a band at a time, so they follow the sun and the moon across the day. A second, sharper shadow map follows the plane for the trees, houses, boats and the plane itself.
 - Everything is drawn with **WebGPU** directly. No game engine or 3D library is used.
 - The plane flies on a small fixed-step flight model shared by both modes, so the autopilot and your hands feel the same and you can switch at any moment.
-- It's light: about 1.7 ms of GPU time per frame at 2560x1440 on an RTX 4060 Ti.
+- It's light: about 1.8 ms of GPU time per frame on average at 2560x1440 on an RTX 4060 Ti (2.4 ms at the 99th percentile, 3.1 ms at worst, over a one-minute flight), so it leaves plenty of room on slower hardware.
 
 ## Make it your own
 

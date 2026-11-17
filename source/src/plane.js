@@ -146,7 +146,10 @@ function stepPlane(turn, pitch, boost) {
   FS[PX] += sin(FS[YAW]) * cp * nv * DT;
   FS[PY] += sin(FS[PIT]) * nv * DT;
   FS[PZ] += cos(FS[YAW]) * cp * nv * DT;
-  const g = groundAt(FS[PX], FS[PZ]) + 3.5;
+  // keep clear of the paper under the body and under both wing tips
+  const wx = -cos(FS[YAW]) * 4;
+  const wz = sin(FS[YAW]) * 4;
+  const g = max(groundAt(FS[PX], FS[PZ]), groundAt(FS[PX] + wx, FS[PZ] + wz), groundAt(FS[PX] - wx, FS[PZ] - wz)) + 3.5;
   if (FS[PY] < g) FS[PY] += (g - FS[PY]) * 0.35;
 }
 
@@ -164,10 +167,14 @@ function autopilot() {
   const rz = sin(FS[YAW]);
   const fx = sin(FS[YAW]) * 20;
   const fz = cos(FS[YAW]) * 20;
-  const gl = groundAt(FS[PX] + fx - rx * 30, FS[PZ] + fz - rz * 30);
-  const gr = groundAt(FS[PX] + fx + rx * 30, FS[PZ] + fz + rz * 30);
-  const wall = max(gl, gr) - (FS[PY] - 18);
-  if (wall > 0) apTurn += clamp((gl - gr) / 25, -1, 1) * min(wall / 10, 1);
+  let gl = -50;
+  let gr = -50;
+  for (let k = 12; k <= 40; k += 14) {
+    gl = max(gl, groundAt(FS[PX] + fx - rx * k, FS[PZ] + fz - rz * k));
+    gr = max(gr, groundAt(FS[PX] + fx + rx * k, FS[PZ] + fz + rz * k));
+  }
+  const wall = max(gl, gr) - (FS[PY] - 26);
+  if (wall > 0) apTurn += clamp((gl - gr) / 15, -1.4, 1.4) * min(wall / 8, 1);
   apTurn = clamp(apTurn, -0.62, 0.62);
   FS[AGL] = 28 + 70 * pow(vn1(t * 0.009 + 4.2), 1.6) + 30 * clamp(slopeAt(FS[PX], FS[PZ]) - 0.3, 0, 1);
   const ty = max(groundAhead(4), WL) + FS[AGL];

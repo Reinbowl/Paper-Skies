@@ -543,7 +543,7 @@ function meshCloud(sd) {
     const cx = rr(-2.2, 2.2);
     const cz = rr(-1, 1);
     const R = rr(1, 1.7) * (1 - abs(cx) * 0.12);
-    const H = R * rr(0.7, 0.9);
+    const H = R * rr(0.5, 0.65);
     const p = 14;
     const rim = [];
     const mid = [];
@@ -874,7 +874,7 @@ function makeWorld() {
   }
   const clouds = [];
   for (let i = 0; i < 30; i++)
-    clouds.push(WO + rnd() * WORLD, rr(170, 320), WO + rnd() * WORLD, rr(12, 30), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
+    clouds.push(WO + rnd() * WORLD, rr(200, 340), WO + rnd() * WORLD, rr(10, 22), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
   for (let i = 0; i < clouds.length; i += 8) {
     let top = -50;
     for (let x = WO; x < -WO; x += 12) top = max(top, hAt(x, clouds[i + 2]));

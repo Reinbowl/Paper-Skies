@@ -204,6 +204,25 @@
       }
       return { peak: db(peak), rms: db(sqrt(sum / d.length)), perSecond: rms };
     },
+    // fly the autopilot for `mins` simulated minutes and report how close it came to the paper
+    clearance: (mins = 15) => {
+      paused = true;
+      let lo = 1e9;
+      let low = 0;
+      let far = 0;
+      const n = mins * 60 * 120;
+      for (let i = 0; i < n; i++) {
+        autopilot();
+        stepPlane(apTurn, apPitch, 0);
+        const wx = -cos(FS[YAW]) * 1.6;
+        const wz = sin(FS[YAW]) * 1.6;
+        const c = FS[PY] - max(groundAt(FS[PX], FS[PZ]), groundAt(FS[PX] + wx, FS[PZ] + wz), groundAt(FS[PX] - wx, FS[PZ] - wz));
+        if (c < lo) lo = c;
+        if (c < 4) low++;
+        far = max(far, hypot(FS[PX], FS[PZ]));
+      }
+      return { minClearance: +lo.toFixed(2), secondsBelow4m: +(low / 120).toFixed(1), farthest: round(far) };
+    },
     play: () => {
       paused = false;
     },

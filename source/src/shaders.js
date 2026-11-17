@@ -304,11 +304,11 @@ fn stars(rd: vec3f) -> vec3f {
     let cc = i + vec2f(f32(x), f32(y));
     let r = h21(cc + 17.); if (r > .17) { continue; }
     let o = cc + vec2f(h21(cc), h21(cc + 5.1)) * .8 + .1;
-    let sz = h21(cc + 2.2); let q = (p - o) / (.07 + .26 * sz * sz);
+    let sz = h21(cc + 2.2); let q = (p - o) / (.05 + .17 * sz * sz);
     let a = atan2(q.y, q.x) + h21(cc + 9.) * 6.28; let rr = length(q);
     let k = cos(a * 5.) * .5 + .5;
     let edge = mix(.62, 1., pow(k, 2.));
-    let m = 1. - ss(edge - .22, edge + .04, rr);
+    let m = mix(1. - ss(edge - .22, edge + .04, rr), exp(-rr * rr * 5.), .4);
     let side = select(.75, 1., sin(a * 5.) > 0.);
     let tw = .75 + .25 * sin(g.cam.w * (.6 + h21(cc + 3.) * 1.2) + r * 40.);
     c += vec3f(1., .92, .72) * m * side * tw * (.45 + .8 * h21(cc + 1.));
@@ -319,7 +319,7 @@ fn stars(rd: vec3f) -> vec3f {
   let rd = normalize(g.fwd.xyz + g.right.xyz * i.ndc.x * g.right.w + g.up.xyz * i.ndc.y * g.up.w);
   var c = skyc(rd, g);
   c *= .97 + .06 * (textureSample(tD, sR, vec2f(atan2(rd.z, rd.x) * 1.3, rd.y * 2.) * 2.).b - .5);
-  if (rd.y > 0.) { c += stars(rd) * ss(-.07, -.24, g.ambs.w) * ss(0., .15, rd.y) * .9; }
+  if (rd.y > 0.) { c += stars(rd) * ss(-.07, -.24, g.ambs.w) * ss(0., .15, rd.y) * ss(.05, .07, acos(clamp(dot(rd, g.moon.xyz), -1., 1.))) * .9; }
   return fin(c);
 }
 `;
@@ -407,7 +407,7 @@ fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), 
     let sn = normalize(vec3f(-gx, 0., -gz) + n * .05);
     if (dot(sn, n) > .2) { n = sn; }
     base = mix(base, vec3f(.97, .95, .9), .16);
-    base *= mix(mix(.62, .8, karst(i.wp.xz)), 1., ss(.0, .16, v)) * (1. + .22 * ss(.9, .97, v) * ss(700., 200., distance(i.wp, g.cam.xyz)));
+    base *= mix(mix(.62, .88, karst(i.wp.xz)), 1., ss(.0, .16, v)) * (1. + .22 * ss(.9, .97, v) * ss(700., 200., distance(i.wp, g.cam.xyz)));
     ao = .9;
     sh = shLand(i.wp.xz + n.xz * GS * .6, i.wp.y - y + L);
   }
@@ -462,13 +462,13 @@ fn facet(p: vec2f) -> vec3f {
   // slow rings of ripples around the torii's posts
   let tc = cos(g.mis.z); let ts = sin(g.mis.z); var dp = 1e3;
   for (var k = -1; k <= 1; k += 2) { dp = min(dp, distance(i.wp.xz, g.mis.xy + vec2f(tc, -ts) * 3.4 * g.mis.w * f32(k))); }
-  let ring = (1. - ss(.0, .09, abs(fract(dp * .55 - g.cam.w * .12) - .5) - .38)) * ss(9., 1., dp) * ss(.6, .8, dp);
+  let ring = (1. - ss(.0, .07, abs(fract(dp * .7 - g.cam.w * .12) - .5) - .41)) * ss(4.4, 1.2, dp) * ss(.6, .8, dp);
   var a = mix(.42, .95, ss(1., 26., depth));
   // shore: a strip of white paper that slowly breathes in and out
   let dsh = -hg.x / max(length(hg.yz), .02);
   let wob = .5 + .5 * sin(g.cam.w * .6 + i.wp.x * .045 + i.wp.z * .037);
   let foam = (1. - ss(.7, 1.1, dsh / (1.2 + 1.3 * wob) + .25 * (h21(floor(i.wp.xz * 2.)) - .5))) * ss(-8., -1., hg.x);
-  let fw = max(foam, ring * .5 + ss(1.1, .62, dp) * .9);
+  let fw = max(foam, ring * .22 + ss(1.1, .62, dp) * .75);
   c = mix(c, shade(vec3f(.93, .93, .9), vec3f(0., 1., 0.), sh, 1., 0.), fw * .9);
   a = max(a, fw * .95);
   c = haze(c, i.wp, g);
@@ -584,7 +584,11 @@ fn seigaiha(p: vec2f) -> f32 {
   if (KIND != 3) { sh *= shNear(i.wp + n * .04); }
   var c = shade(base * paper(i.wp, n, select(.9, 2.2, KIND == 5)), n, sh, 1., thin) + emit;
   // clouds take on the sky around them, so their undersides stay soft, by night too
-  if (KIND == 3) { c = mix(c, skyc(normalize(i.wp - g.cam.xyz), g) * 1.15 + base * g.ambs.rgb * .2, .35 + .25 * g.keyc.w); }
+  if (KIND == 3) {
+    c = mix(c, skyc(normalize(i.wp - g.cam.xyz), g) * 1.15 + base * g.ambs.rgb * .2, .35 + .25 * g.keyc.w);
+    // a cloud the camera drifts into dissolves rather than filling the view
+    if (ign(i.cp.xy) > ss(40., 120., distance(i.wp, g.cam.xyz))) { discard; }
+  }
   if (i.glow > 0.) { c = base * 5. * g.hor.w + c * .4; }
   return fin(haze(c, i.wp, g));
 }
