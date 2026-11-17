@@ -2,7 +2,7 @@
 
 **A calm origami world you drift over in a paper plane, right in your browser.**
 
-Islands made of stacked sheets of paper, a translucent paper sea, cherry trees, a pagoda on the hill and a red torii gate standing in the shallows. The sun folds into the sea at dusk, an origami moon rises, and paper lanterns drift up from the villages. Everything is made by code: no images, no 3D models, no sound files. The whole world fits in **one HTML file of under 100 KB**.
+Islands made of stacked sheets of paper, a translucent paper sea, cherry trees, a pagoda on the hill and a red torii gate standing in the shallows. The sun folds into the sea at dusk, an origami moon rises, and paper lanterns drift up from the villages. Everything you see is made by code: no images, no 3D models. The whole world, music included, fits in **one HTML file of about 2.8 MB** (81 KB of it is the world; the rest is the music).
 
 ![The torii gate in the bay](.github/screenshots/torii.jpg)
 
@@ -28,7 +28,7 @@ The camera always keeps the plane in the middle of the screen.
 - **Karst pillars** rising from the sea in the north-east, a snow-capped cone on the main island, rolling green islets
 - **Folded props**: pleated pines, slotted paper-card trees (cherry and maple among them), houses with windows that light up at night, a pagoda with sweeping eaves, a torii gate with slow ripples around its posts, paper boats, flocks of origami cranes and pleated clouds
 - **Day and night**: a pleated paper sun crosses the sky and sets into the sea as a crescent moon rises; folded stars come out, and lanterns drift up over the villages and float on the bay
-- **A quiet soundscape** made up as you listen: wind over the wings, the sea below, a slow pentatonic drone, wind chimes, a few plucked notes, a singing bowl at dawn and dusk, birds by day and crickets by night
+- **Music**: *風の呼吸 (Breath of the Wind)*, a flute piece made with [Suno](https://suno.com), looping without a pause, over a soft bed of wind over the wings, the sea below, birds by day and crickets by night
 
 | | |
 |---|---|
@@ -69,6 +69,7 @@ If loading crashes the tab or the graphics driver gives up, the page starts agai
 - A compute shader shapes the islands on the graphics card when the page opens. The heights are then cut into sheets: flat stretches merge into large squares (with no cracks between them), and the edge of every sheet is traced with marching squares and given a wall one sheet tall.
 - Shadows of the land come from a height map that is re-traced toward the sun a band at a time, so they follow the sun and the moon across the day. A second, sharper shadow map follows the plane for the trees, houses, boats and the plane itself.
 - Everything is drawn with **WebGPU** directly. No game engine or 3D library is used.
+- The music is embedded in the page. It plays whole and loops: when it is decoded, its own fade-out is laid over its opening, so it wraps around without a pause.
 - The plane flies on a small fixed-step flight model shared by both modes, so the autopilot and your hands feel the same and you can switch at any moment.
 - It's light: about 1.8 ms of GPU time per frame on average at 2560x1440 on an RTX 4060 Ti (2.4 ms at the 99th percentile, 3.1 ms at worst, over a one-minute flight), so it leaves plenty of room on slower hardware.
 
@@ -91,7 +92,8 @@ npm run build
 | [`source/src/sky.js`](source/src/sky.js) | The time of day: the sun and moon paths and the sky colours |
 | [`source/src/plane.js`](source/src/plane.js) | The flight model, the autopilot and the chase camera |
 | [`source/src/main.js`](source/src/main.js) | The renderer, the frame loop, the controls and the menu |
-| [`source/src/audio.js`](source/src/audio.js) | The soundscape |
+| [`source/src/audio.js`](source/src/audio.js) | The music loop and the wind, sea, birds and crickets under it |
+| [`source/music.ogg`](source/music.ogg) | The music (Opus, 64 kbit/s), embedded by the build |
 | [`source/src/quality.js`](source/src/quality.js) | The detail levels |
 | [`source/src/math.js`](source/src/math.js) | Noise, random numbers, world constants and the mesh builder |
 | [`source/src/dev.js`](source/src/dev.js) | Development tools, only in `dev.html` |
@@ -104,6 +106,7 @@ Some easy first tweaks:
 - **Land colours:** `layerCol` in `shaders.js`
 - **The islands:** the `ISLANDS` list at the top of `world.js`
 - **The plane's colour:** `PLANE_COL` in `main.js`
+- **The music:** replace `source/music.ogg` (for example `ffmpeg -i song.mp3 -vn -map_metadata -1 -c:a libopus -b:a 64k source/music.ogg`) and rebuild; delete it to fly with only the wind and the sea. Its level is `MVOL` in `audio.js`
 
 ## Credits
 

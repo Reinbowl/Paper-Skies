@@ -180,7 +180,9 @@
     audioTest: async (secs = 60) => {
       const sr = 44100;
       const oc = new OfflineAudioContext(2, sr * secs, sr);
+      const music = await loadMusic(oc);
       const tick = mkSound(oc);
+      playMusic(oc, music);
       for (let t = 0.1; t < secs - 0.1; t += 0.1)
         oc.suspend(round(t * 10) / 10).then(() => {
           tick();
@@ -223,6 +225,37 @@
       }
       return { minClearance: +lo.toFixed(2), secondsBelow4m: +(low / 120).toFixed(1), farthest: round(far) };
     },
+    // loudness (dB, per quarter second) across the music's loop point: the last 8 s before it, then the first 8 s after
+    musicSeam: async () => {
+      const oc = new OfflineAudioContext(2, 48000, 48000);
+      const m = await loadMusic(oc);
+      const b = m.buf;
+      const sr = b.sampleRate;
+      const end = b.length - m.x;
+      const d0 = b.getChannelData(0);
+      const q = sr >> 2;
+      const at = (i0) => {
+        let s = 0;
+        for (let i = i0; i < i0 + q; i++) {
+          const v = d0[(i + end) % end];
+          s += v * v;
+        }
+        return +(10 * Math.log10(s / q + 1e-12)).toFixed(1);
+      };
+      const before = [];
+      const after = [];
+      for (let k = 32; k > 0; k--) before.push(at(end - k * q));
+      for (let k = 0; k < 32; k++) after.push(at(k * q));
+      // the samples right at the seam: last two before, first two after
+      return {
+        overlapSeconds: +(m.x / sr).toFixed(2),
+        loopSeconds: +(end / sr).toFixed(2),
+        before,
+        after,
+        seam: [d0[end - 2], d0[end - 1], d0[0], d0[1]].map((v) => +v.toFixed(4)),
+      };
+    },
+    audio: () => ({ state: AC?.state, music: MUS ? +MUS.gain.value.toFixed(3) : null, time: AC ? +AC.currentTime.toFixed(1) : 0 }),
     play: () => {
       paused = false;
     },

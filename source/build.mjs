@@ -2,7 +2,7 @@
 //   npm run build            minified
 //   npm run build:readable   unminified, for debugging
 //   npm run build:dev        ../dev.html: unminified, plus the development tools in src/dev.js
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
@@ -17,6 +17,9 @@ const out = dev ? 'dev.html' : 'index.html';
 if (dev) FILES.push('dev.js');
 
 let js = FILES.map((f) => readFileSync(path.join(here, 'src', f), 'utf8')).join('\n');
+// the music, embedded as base64 (see audio.js)
+const music = path.join(here, 'music.ogg');
+js = js.replace("'/*MUSIC*/'", () => JSON.stringify(existsSync(music) ? readFileSync(music).toString('base64') : ''));
 const tpl = readFileSync(path.join(here, 'template.html'), 'utf8');
 // everything runs inside one async function; startup errors are shown on screen
 const wrap = (body) =>
