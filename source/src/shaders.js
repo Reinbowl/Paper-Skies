@@ -442,10 +442,14 @@ fn facet(p: vec2f) -> vec3f {
   var col = lin(mix(vec3f(.62, .86, .84), vec3f(.16, .36, .52), deep));
   let sh = mix(.45, 1., shLand(i.wp.xz, depth) * shNear(i.wp));
   var c = shade(col, n, sh, 1., .4) * paper(i.wp, vec3f(0., 1., 0.), .25);
-  let fr = .04 + .5 * pow(1. - sat(dot(n, v)), 4.);
+  let fr = .04 + .32 * pow(1. - sat(dot(n, v)), 4.);
   c = mix(c, skyc(reflect(-v, n), g), fr);
+  // a soft sheen across whole facets, and small sparkles where the light catches the paper's grain
   let hv = normalize(g.key.xyz + v);
-  c += g.keyc.rgb * g.key.w * pow(max(dot(n, hv), 0.), 160.) * 1.4 * sh;
+  let cell = floor(i.wp.xz * 1.25);
+  let nj = normalize(n + (vec3f(h21(cell), 0., h21(cell + 7.3)) - vec3f(.5, 0., .5)) * .3);
+  let spark = pow(max(dot(nj, hv), 0.), 500.) * ss(260., 30., d) * step(.55, h21(cell + 3.1));
+  c += g.keyc.rgb * g.key.w * (pow(max(dot(n, hv), 0.), 40.) * .12 + spark * 1.3) * sh;
   var a = mix(.42, .95, ss(1., 26., depth));
   // shore: a strip of white paper that slowly breathes in and out
   let dsh = -hg.x / max(length(hg.yz), .02);

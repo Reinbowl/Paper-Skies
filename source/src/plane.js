@@ -157,7 +157,7 @@ function autopilot() {
   const t = FS[SIMT];
   const want = atan2(FS[GX] - FS[PX], FS[GZ] - FS[PZ]) + 0.9 * (vn1(t * 0.021) - 0.5);
   apTurn = clamp(-adiff(FS[YAW], want) * 1.3, -0.62, 0.62);
-  FS[AGL] = 20 + 75 * pow(vn1(t * 0.009 + 4.2), 1.6);
+  FS[AGL] = 28 + 70 * pow(vn1(t * 0.009 + 4.2), 1.6) + 30 * clamp(slopeAt(FS[PX], FS[PZ]) - 0.3, 0, 1);
   const ty = max(groundAhead(4), WL) + FS[AGL];
   const vy = sin(FS[PIT]) * FS[SPD];
   apPitch = clamp((ty - FS[PY]) * 0.035 - vy * 0.09, -0.55, 0.65);

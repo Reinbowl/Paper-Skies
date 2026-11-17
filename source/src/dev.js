@@ -161,6 +161,47 @@
       daylight(a);
       shadowsNow();
     },
+    // advance k frames of 1/60 s by hand (the page stays paused), for frame-exact sequences
+    adv: (k) => {
+      paused = true;
+      for (let i = 0; i < k; i++) {
+        F[TOD] += (TAU * dayRate(F[TOD])) / 60 / CYCLE;
+        FS[ACC] += 1 / 60;
+        while (FS[ACC] >= DT) {
+          controls();
+          FS[ACC] -= DT;
+        }
+        chase(1 / 60, auto || menu);
+      }
+    },
+    // render a minute of the soundscape offline and measure it: peak and loudness per second (dBFS)
+    audioTest: async (secs = 60) => {
+      const sr = 44100;
+      const oc = new OfflineAudioContext(2, sr * secs, sr);
+      const tick = mkSound(oc);
+      for (let t = 0.1; t < secs - 0.1; t += 0.1)
+        oc.suspend(round(t * 10) / 10).then(() => {
+          tick();
+          oc.resume();
+        });
+      const b = await oc.startRendering();
+      const d = b.getChannelData(0);
+      const db = (x) => +(20 * Math.log10(x + 1e-9)).toFixed(1);
+      let peak = 0;
+      let sum = 0;
+      const rms = [];
+      for (let s = 0; s < secs; s++) {
+        let q = 0;
+        for (let i = s * sr; i < (s + 1) * sr; i++) {
+          const v = d[i];
+          q += v * v;
+          if (abs(v) > peak) peak = abs(v);
+        }
+        sum += q;
+        rms.push(db(sqrt(q / sr)));
+      }
+      return { peak: db(peak), rms: db(sqrt(sum / d.length)), perSecond: rms };
+    },
     play: () => {
       paused = false;
     },

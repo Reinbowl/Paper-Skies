@@ -90,6 +90,10 @@ try {
         await sleep(100);
       }
     }
+    if (s.key) {
+      const [type, code] = s.key;
+      await send('Input.dispatchKeyEvent', { type, code, key: code.replace(/^Key/, '').toLowerCase(), windowsVirtualKeyCode: s.vk || 0 });
+    }
     if (s.sleep) await sleep(s.sleep);
     if (s.shot) {
       const r = await send('Page.captureScreenshot', { format: s.shot.endsWith('.jpg') ? 'jpeg' : 'png', quality: 90 });
