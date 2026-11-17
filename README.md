@@ -26,7 +26,7 @@ The camera always keeps the plane in the middle of the screen.
 - **Stacked paper land**: every few metres of height is its own sheet with a cut edge and a soft shadow at its foot, from the sandy beaches to the snow at the top of the mountain
 - **A paper sea**: layered blue shallows under a sheet of tracing paper folded into slow facets, with a white strip of paper breathing along every shore
 - **Karst pillars** rising from the sea in the north-east, a snow-capped cone on the main island, rolling green islets
-- **Folded props**: pines and round trees, cherry and maple trees, houses with windows that light up at night, a pagoda, a torii gate, paper boats, flocks of origami cranes and folded clouds
+- **Folded props**: pleated pines, slotted paper-card trees (cherry and maple among them), houses with windows that light up at night, a pagoda with sweeping eaves, a torii gate with slow ripples around its posts, paper boats, flocks of origami cranes and pleated clouds
 - **Day and night**: a pleated paper sun crosses the sky and sets into the sea as a crescent moon rises; folded stars come out, and lanterns drift up over the villages and float on the bay
 - **A quiet soundscape** made up as you listen: wind over the wings, the sea below, a slow pentatonic drone, wind chimes, a few plucked notes, a singing bowl at dawn and dusk, birds by day and crickets by night
 

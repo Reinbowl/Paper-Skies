@@ -300,6 +300,7 @@ const nCrane = Wd.cranes.length / 8;
 const nCloud = Wd.clouds.length / 8;
 const nLant = Wd.lanterns.length / 8;
 Q.writeTexture({ texture: tM }, Wd.gm, { bytesPerRow: 1024 * 4 }, [1024, 1024]);
+UB.set([Wd.torii[0], Wd.torii[1], Wd.toriiYaw, 1.45], 100);
 
 // ---------------------------------------------------------------- one-time bakes: paper texture
 {

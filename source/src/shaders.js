@@ -279,6 +279,10 @@ fn faceN(wp: vec3f) -> vec3f {
   return n;
 }
 fn lin(c: vec3f) -> vec3f { return pow(c, vec3f(2.2)); }
+fn vn2(p: vec2f) -> f32 {
+  let i = floor(p); let f = fract(p); let u = f * f * (3. - 2. * f);
+  return mix(mix(h21(i), h21(i + vec2f(1., 0.)), u.x), mix(h21(i + vec2f(0., 1.)), h21(i + vec2f(1., 1.)), u.x), u.y);
+}
 `;
 
 // ---------------------------------------------------------------- sky (behind everything)
@@ -303,11 +307,11 @@ fn stars(rd: vec3f) -> vec3f {
     let sz = h21(cc + 2.2); let q = (p - o) / (.07 + .26 * sz * sz);
     let a = atan2(q.y, q.x) + h21(cc + 9.) * 6.28; let rr = length(q);
     let k = cos(a * 5.) * .5 + .5;
-    let edge = mix(.42, 1., pow(k, 3.));
-    let m = 1. - ss(edge - .08, edge + .02, rr);
+    let edge = mix(.62, 1., pow(k, 2.));
+    let m = 1. - ss(edge - .22, edge + .04, rr);
     let side = select(.75, 1., sin(a * 5.) > 0.);
     let tw = .75 + .25 * sin(g.cam.w * (.6 + h21(cc + 3.) * 1.2) + r * 40.);
-    c += vec3f(1., .9, .66) * m * side * tw * (.6 + 1.2 * h21(cc + 1.));
+    c += vec3f(1., .92, .72) * m * side * tw * (.45 + .8 * h21(cc + 1.));
   } }
   return c;
 }
@@ -340,9 +344,9 @@ struct OO { @builtin(position) cp: vec4f, @location(0) wp: vec3f, @location(1) @
   let lit = .72 + .4 * sat(dot(n, normalize(u * .7 - r * .5 - i.dir * .5)));
   var c: vec3f;
   switch (i.part) {
-    case 0u: { c = vec3f(3.4, 1.65, .5); }
-    case 1u: { c = vec3f(3.6, 2.2, .7); }
-    case 2u: { c = vec3f(3.2, 1.2, .42); }
+    case 0u: { c = vec3f(2.5, 1.3, .42); }
+    case 1u: { c = vec3f(2.7, 1.7, .6); }
+    case 2u: { c = vec3f(2.4, .95, .36); }
     case 8u: { c = vec3f(1.5, 1.45, 1.25); }
     default: { c = vec3f(1.25, 1.18, 1.); }
   }
@@ -403,7 +407,7 @@ fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), 
     let sn = normalize(vec3f(-gx, 0., -gz) + n * .05);
     if (dot(sn, n) > .2) { n = sn; }
     base = mix(base, vec3f(.97, .95, .9), .16);
-    base *= mix(.62, 1., ss(.0, .16, v)) * (1. + .22 * ss(.9, .97, v));
+    base *= mix(mix(.62, .8, karst(i.wp.xz)), 1., ss(.0, .16, v)) * (1. + .22 * ss(.9, .97, v) * ss(700., 200., distance(i.wp, g.cam.xyz)));
     ao = .9;
     sh = shLand(i.wp.xz + n.xz * GS * .6, i.wp.y - y + L);
   }
@@ -411,10 +415,6 @@ fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), 
   sh *= shNear(i.wp + n * .05);
   var c = shade(lin(base) * paper(i.wp, n, .4), n, sh, ao, 0.);
   return fin(haze(c, i.wp, g));
-}
-fn vn2(p: vec2f) -> f32 {
-  let i = floor(p); let f = fract(p); let u = f * f * (3. - 2. * f);
-  return mix(mix(h21(i), h21(i + vec2f(1., 0.)), u.x), mix(h21(i + vec2f(0., 1.)), h21(i + vec2f(1., 1.)), u.x), u.y);
 }
 `;
 
@@ -428,10 +428,12 @@ struct WO_ { @builtin(position) cp: vec4f, @location(0) wp: vec3f };
   let wp = vec3f(g.cam.x + c.x * 9000., WL, g.cam.z + c.y * 9000.);
   return WO_(g.vp * vec4f(wp, 1.), wp);
 }
-fn wv(v: vec2f) -> f32 { let h = h21(v * 1.37 + 3.1); return .32 * sin(g.cam.w * (.5 + .35 * h) + h * TAU); }
+fn wv(v: vec2f) -> f32 { let h = h21(v * 1.37 + 3.1); return .38 * sin(g.cam.w * (.45 + .3 * h) + h * TAU); }
 fn wpos(v: vec2f, s: f32) -> vec3f { return vec3f((v.x + v.y * .5) * s, wv(v), v.y * .8660254 * s); }
 fn facet(p: vec2f) -> vec3f {
-  let s = 7.; let q = p / s;
+  let r = vec2f(p.x * .93 + p.y * .37, p.y * .93 - p.x * .37);
+  let w = r + vec2f(vn2(r * .045), vn2(r * .045 + 9.1)) * 7.;
+  let s = 11.; let q = w / s;
   let b = q.y / .8660254; let a = q.x - b * .5;
   let ia = floor(a); let ib = floor(b);
   var v0 = vec2f(ia, ib); var v1 = vec2f(ia + 1., ib); var v2 = vec2f(ia, ib + 1.);
@@ -445,7 +447,7 @@ fn facet(p: vec2f) -> vec3f {
   let depth = WL - fl;
   let d = distance(i.wp, g.cam.xyz);
   let v = normalize(g.cam.xyz - i.wp);
-  let n = normalize(mix(facet(i.wp.xz), vec3f(0., 1., 0.), ss(140., 650., d)));
+  let n = normalize(mix(facet(i.wp.xz), vec3f(0., 1., 0.), ss(110., 520., d)));
   let deep = ss(2., 30., depth);
   var col = lin(mix(vec3f(.62, .86, .84), vec3f(.16, .36, .52), deep));
   let sh = mix(.45, 1., shLand(i.wp.xz, depth) * shNear(i.wp));
@@ -455,13 +457,20 @@ fn facet(p: vec2f) -> vec3f {
   // a soft sheen that drifts across the facets as they slowly tilt
   let hv = normalize(g.key.xyz + v);
   c += g.keyc.rgb * g.key.w * (pow(max(dot(n, hv), 0.), 60.) * .16 + pow(max(dot(n, hv), 0.), 8.) * .03) * sh;
+  let path = pow(max(dot(reflect(-v, normalize(mix(n, vec3f(0., 1., 0.), .5))), g.key.xyz), 0.), 30.);
+  c += g.keyc.rgb * g.key.w * path * .35 * ss(.45, .05, g.key.y) * sh;
+  // slow rings of ripples around the torii's posts
+  let tc = cos(g.mis.z); let ts = sin(g.mis.z); var dp = 1e3;
+  for (var k = -1; k <= 1; k += 2) { dp = min(dp, distance(i.wp.xz, g.mis.xy + vec2f(tc, -ts) * 3.4 * g.mis.w * f32(k))); }
+  let ring = (1. - ss(.0, .09, abs(fract(dp * .55 - g.cam.w * .12) - .5) - .38)) * ss(9., 1., dp) * ss(.6, .8, dp);
   var a = mix(.42, .95, ss(1., 26., depth));
   // shore: a strip of white paper that slowly breathes in and out
   let dsh = -hg.x / max(length(hg.yz), .02);
   let wob = .5 + .5 * sin(g.cam.w * .6 + i.wp.x * .045 + i.wp.z * .037);
   let foam = (1. - ss(.7, 1.1, dsh / (1.2 + 1.3 * wob) + .25 * (h21(floor(i.wp.xz * 2.)) - .5))) * ss(-8., -1., hg.x);
-  c = mix(c, shade(vec3f(.93, .93, .9), vec3f(0., 1., 0.), sh, 1., 0.), foam * .9);
-  a = max(a, foam * .95);
+  let fw = max(foam, ring * .5 + ss(1.1, .62, dp) * .9);
+  c = mix(c, shade(vec3f(.93, .93, .9), vec3f(0., 1., 0.), sh, 1., 0.), fw * .9);
+  a = max(a, fw * .95);
   c = haze(c, i.wp, g);
   a = mix(a, 1., hazeAmt(i.wp, g));
   return vec4f(min(c, vec3f(60.)) * a, a);
@@ -567,16 +576,15 @@ fn seigaiha(p: vec2f) -> f32 {
     base *= crease * mix(.9, 1.06, ss(.1, .9, ax));
     thin = .7;
   }
-  if (KIND == 3) {
-    thin = .9;
-    base *= 1. - .45 * g.keyc.w;
-  }
+  if (KIND == 3) { thin = .9; }
   base = lin(base) * i.shade;
   let hg = hgrid(i.wp.xz);
   let rel = i.wp.y - sheetY(hg.x);
   var sh = shLand(i.wp.xz, rel);
   if (KIND != 3) { sh *= shNear(i.wp + n * .04); }
   var c = shade(base * paper(i.wp, n, select(.9, 2.2, KIND == 5)), n, sh, 1., thin) + emit;
+  // clouds take on the sky around them, so their undersides stay soft, by night too
+  if (KIND == 3) { c = mix(c, skyc(normalize(i.wp - g.cam.xyz), g) * 1.15 + base * g.ambs.rgb * .2, .35 + .25 * g.keyc.w); }
   if (i.glow > 0.) { c = base * 5. * g.hor.w + c * .4; }
   return fin(haze(c, i.wp, g));
 }

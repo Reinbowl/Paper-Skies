@@ -158,7 +158,17 @@ function autopilot() {
   if (FS[GT] <= 0 || hypot(FS[GX] - FS[PX], FS[GZ] - FS[PZ]) < 160) pickGoal();
   const t = FS[SIMT];
   const want = atan2(FS[GX] - FS[PX], FS[GZ] - FS[PZ]) + 0.9 * (vn1(t * 0.021) - 0.5);
-  apTurn = clamp(-adiff(FS[YAW], want) * 1.3, -0.62, 0.62);
+  apTurn = -adiff(FS[YAW], want) * 1.3;
+  // lean away from ground rising beside the plane
+  const rx = -cos(FS[YAW]);
+  const rz = sin(FS[YAW]);
+  const fx = sin(FS[YAW]) * 20;
+  const fz = cos(FS[YAW]) * 20;
+  const gl = groundAt(FS[PX] + fx - rx * 30, FS[PZ] + fz - rz * 30);
+  const gr = groundAt(FS[PX] + fx + rx * 30, FS[PZ] + fz + rz * 30);
+  const wall = max(gl, gr) - (FS[PY] - 18);
+  if (wall > 0) apTurn += clamp((gl - gr) / 25, -1, 1) * min(wall / 10, 1);
+  apTurn = clamp(apTurn, -0.62, 0.62);
   FS[AGL] = 28 + 70 * pow(vn1(t * 0.009 + 4.2), 1.6) + 30 * clamp(slopeAt(FS[PX], FS[PZ]) - 0.3, 0, 1);
   const ty = max(groundAhead(4), WL) + FS[AGL];
   const vy = sin(FS[PIT]) * FS[SPD];

@@ -5,7 +5,7 @@
 // islands: x, z, radius, height, kind (0 rolling, 1 cone, 2 pillar), coastline warp, roughness
 const ISLANDS = [
   [-130, 60, 660, 34, 0, 130, 0.9], // main island
-  [-220, -60, 560, 236, 1, 22, 0.12], // the snow-capped cone
+  [-220, -60, 560, 236, 1, 22, 0.05], // the snow-capped cone
   [210, 200, 330, 54, 0, 120, 1.1], // eastern hills
   [-40, 560, 280, 22, 0, 110, 0.8], // southern peninsula, the village and the torii bay
   [-830, 700, 340, 66, 0, 140, 1.2], // south-west green isle
@@ -346,30 +346,24 @@ function meshPine(lod) {
   }
   return m;
 }
+// a papercraft tree: three cut-out cards slotted together, each folded a little down its middle
 function meshRound(lod) {
   const m = new Mesh();
-  const tr = m.ring(5, 0, 0.3, 0, 120);
-  const tt = m.ring(5, 2.6, 0.22, 0, 200);
-  m.band(tr, tt);
-  // a pleated paper ball: two rings of alternating folds between a low and a high point
-  const n = lod ? 6 : 12;
-  const r = 2.8;
-  const eq = [];
-  const hi = [];
-  for (let k = 0; k < n; k++) {
-    const a = (k / n) * TAU;
-    const out = k % 2 === 0;
-    eq.push(m.v(cos(a) * r * (out ? 1 : 0.74), 4.3 + (out ? 0 : 0.35), sin(a) * r * (out ? 1 : 0.74), 1, out ? 225 : 180));
-    const b = a + PI / n;
-    hi.push(m.v(cos(b) * r * (out ? 0.66 : 0.5), 6.1 + (out ? 0 : 0.25), sin(b) * r * (out ? 0.66 : 0.5), 1, out ? 245 : 215));
+  const n = lod ? 10 : 18;
+  for (let c = 0; c < 3; c++) {
+    const a = (c / 3) * PI + 0.3;
+    const ux = cos(a);
+    const uz = sin(a);
+    const P = (u, y, part, shade) => m.v(ux * u - uz * abs(u) * 0.14, y, uz * u + ux * abs(u) * 0.14, part, shade);
+    m.quad(P(-0.24, 0, 0, 130), P(0.24, 0, 0, 130), P(0.18, 3.1, 0, 190), P(-0.18, 3.1, 0, 190));
+    const ring = [];
+    for (let k = 0; k < n; k++) {
+      const t = (k / n) * TAU + PI / 2;
+      const r = 2.6 * (k % 2 ? 0.9 : 1);
+      ring.push(P(cos(t) * r, 4.9 + sin(t) * r * 1.08, 1, 255));
+    }
+    m.fan(ring, P(0, 4.9, 1, 215));
   }
-  m.fan(eq, m.v(0, 2.5, 0, 1, 120), true);
-  for (let k = 0; k < n; k++) {
-    const k2 = (k + 1) % n;
-    m.tri(eq[k], eq[k2], hi[k]);
-    m.tri(eq[k2], hi[k2], hi[k]);
-  }
-  m.fan(hi, m.v(0, 7.1, 0, 1, 255));
   return m;
 }
 function meshBush() {
@@ -420,24 +414,28 @@ function meshHouse() {
 }
 function meshPagoda() {
   const m = new Mesh();
-  m.box(-3.9, -2, -3.9, 3.9, 0.5, 3.9, 5);
+  m.box(-3.4, -0.4, -3.4, 3.4, 0.5, 3.4, 5);
   let y = 0.5;
   for (let t = 0; t < 4; t++) {
     const w = 3.3 - t * 0.6;
     m.box(-w, y, -w, w, y + 2.4, w, 1);
     y += 2.4;
-    // roof: upturned corners, folded to a ridge at the middle of each side
-    const o = w + 1.7;
-    const c = [];
-    for (let k = 0; k < 8; k++) {
-      const a = (k / 8) * TAU + PI / 4;
-      const corner = k % 2 === 0;
-      const r = corner ? o * Math.SQRT2 : o;
-      c.push(m.v(cos(a) * r, y + (corner ? 1.05 : 0.05), sin(a) * r, 4, corner ? 235 : 185));
-    }
-    const apex = m.v(0, y + 1.9, 0, 4, 255);
-    m.fan(c, apex);
-    m.fan(c, m.v(0, y - 0.2, 0, 4, 90), true);
+    // roof: a steep upper fold, then wide eaves that sweep up toward the corners
+    const ring = (rad, yc, ym, shade) => {
+      const c = [];
+      for (let k = 0; k < 8; k++) {
+        const a = (k / 8) * TAU + PI / 4;
+        const corner = k % 2 === 0;
+        const r = corner ? rad * Math.SQRT2 : rad;
+        c.push(m.v(cos(a) * r, y + (corner ? yc : ym), sin(a) * r, 4, corner ? shade : shade - 40));
+      }
+      return c;
+    };
+    const inner = ring(w + 0.45, 0.85, 0.75, 225);
+    const eave = ring(w + 2, 1.25, 0.12, 245);
+    m.fan(inner, m.v(0, y + 1.9, 0, 4, 255));
+    m.band(eave, inner);
+    m.fan(eave, m.v(0, y - 0.1, 0, 4, 90), true);
     y += 0.9;
   }
   m.box(-0.12, y, -0.12, 0.12, y + 3.2, 0.12, 4);
@@ -719,11 +717,13 @@ function makeWorld() {
     20000,
   );
   const tg = [hAt(torii[0] + 4, torii[1]) - hAt(torii[0] - 4, torii[1]), hAt(torii[0], torii[1] + 4) - hAt(torii[0], torii[1] - 4)];
-  put(5, torii[0], groundAt(torii[0], torii[1]) - 0.05, torii[1], 1.45, atan2(tg[0], tg[1]), rgb(0.82, 0.27, 0.2));
+  const toriiYaw = atan2(tg[0], tg[1]);
+  put(5, torii[0], groundAt(torii[0], torii[1]) - 0.05, torii[1], 1.45, toriiYaw, rgb(0.82, 0.27, 0.2));
   claim(torii[0], torii[1], 14);
   const pagoda = spot(240, 170, 160, (x, z) => {
     const h = hAt(x, z);
-    return roomAt(x, z) > 12 && h > 20 ? h : -1e9;
+    const room = roomAt(x, z);
+    return room > 14 && h > 20 ? min(room, 30) + h * 0.05 : -1e9;
   });
   put(4, pagoda[0], groundAt(pagoda[0], pagoda[1]), pagoda[1], 1.25, rnd() * TAU, rgb(0.8, 0.3, 0.22));
   claim(pagoda[0], pagoda[1], 14);
@@ -874,7 +874,12 @@ function makeWorld() {
   }
   const clouds = [];
   for (let i = 0; i < 30; i++)
-    clouds.push(WO + rnd() * WORLD, rr(160, 320), WO + rnd() * WORLD, rr(12, 30), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
+    clouds.push(WO + rnd() * WORLD, rr(170, 320), WO + rnd() * WORLD, rr(12, 30), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
+  for (let i = 0; i < clouds.length; i += 8) {
+    let top = -50;
+    for (let x = WO; x < -WO; x += 12) top = max(top, hAt(x, clouds[i + 2]));
+    if (clouds[i + 1] < top + 45) clouds[i + 1] = top + 45 + rnd() * 40;
+  }
   const lanterns = [];
   for (const c of villages)
     for (let k = 0; k < 14; k++)
@@ -938,6 +943,7 @@ function makeWorld() {
     GMN,
     pois,
     torii,
+    toriiYaw,
     pagoda,
     villages,
   };
