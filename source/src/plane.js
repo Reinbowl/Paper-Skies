@@ -64,16 +64,18 @@ const apRnd = () => {
 };
 let POIS = [];
 
-// highest ground along the heading, `secs` seconds ahead
+// highest ground along the heading, `secs` seconds ahead, including a wingspan or two to either side
 function groundAhead(secs) {
   const fx = sin(FS[YAW]);
   const fz = cos(FS[YAW]);
   const v = FS[SPD];
   let g = groundAt(FS[PX], FS[PZ]);
-  for (let k = 1; k <= 8; k++) {
+  for (let k = 0; k <= 8; k++) {
     const d = (k / 8) * secs * v;
-    const h = groundAt(FS[PX] + fx * d, FS[PZ] + fz * d);
-    if (h > g) g = h;
+    for (let s = -1; s <= 1; s++) {
+      const h = groundAt(FS[PX] + fx * d + fz * s * 7, FS[PZ] + fz * d - fx * s * 7);
+      if (h > g) g = h;
+    }
   }
   return g;
 }
@@ -119,7 +121,7 @@ function stepPlane(turn, pitch, boost) {
   FS[SIMT] += DT;
   const v = FS[SPD];
   // rising sheets ahead lift the plane over them, so it never meets a cut edge head on
-  const need = groundAhead(2.2) + 7 - FS[PY];
+  const need = groundAhead(2.4) + 10 - FS[PY];
   let pt = pitch * 0.55;
   if (need > 0) pt = max(pt, min(need * 0.07, 0.65));
   if (FS[PY] > 360) pt = min(pt, -(FS[PY] - 360) * 0.01);
@@ -144,7 +146,7 @@ function stepPlane(turn, pitch, boost) {
   FS[PX] += sin(FS[YAW]) * cp * nv * DT;
   FS[PY] += sin(FS[PIT]) * nv * DT;
   FS[PZ] += cos(FS[YAW]) * cp * nv * DT;
-  const g = groundAt(FS[PX], FS[PZ]) + 2.4;
+  const g = groundAt(FS[PX], FS[PZ]) + 3.5;
   if (FS[PY] < g) FS[PY] += (g - FS[PY]) * 0.35;
 }
 
@@ -181,7 +183,9 @@ function chase(dt, auto) {
   const lift = auto ? 0.1 * sin(t * 0.033 + 0.6) : 0;
   FS[CPIT] += (FS[IPIT] * 0.45 - 0.13 - lift - FS[CPIT]) * k;
   FS[CROL] += (FS[IROL] * 0.22 - FS[CROL]) * (1 - exp(-dt * 3));
-  FS[CDIST] += (12.5 + (FS[SPD] - 21) * 0.18 + (auto ? 2 * sin(t * 0.027) : 0) - FS[CDIST]) * (1 - exp(-dt * 1.5));
+  const agl = FS[IY] - groundAt(FS[IX], FS[IZ]);
+  FS[CDIST] +=
+    (12.5 + (FS[SPD] - 21) * 0.18 + (auto ? 2 * sin(t * 0.027) : 0) + clamp((agl - 50) / 12, 0, 9) - FS[CDIST]) * (1 - exp(-dt * 1.5));
   const cp = cos(FS[CPIT]);
   const d = FS[CDIST];
   let x = FS[IX] - sin(FS[CYAW]) * cp * d;
@@ -193,7 +197,8 @@ function chase(dt, auto) {
   z = FS[CZ] + (z - FS[CZ]) * kp;
   let gm = groundAt(x, z);
   for (let k2 = 0; k2 < 4; k2++) gm = max(gm, groundAt(x + ((k2 & 1) * 2 - 1) * 2, z + ((k2 >> 1) * 2 - 1) * 2));
-  if (y < gm + 1.6) y = gm + 1.6;
+  const floorY = gm + min(9, max(3, agl + 1));
+  if (y < floorY) y = floorY;
   FS[CX] = x;
   FS[CY] = y;
   FS[CZ] = z;

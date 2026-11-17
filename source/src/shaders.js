@@ -52,8 +52,10 @@ fn height(p: vec2f) -> f32 {
       let top = min(cone, .93) / .93 - .035 * ss(.07, .0, d);
       e = -42. + (a.w + 42.) * top - b.z * gul * ss(.0, .3, d) * ss(1., .5, d) * 26.;
     } else {
-      let f = exp(-pow(d, 5.));
-      e = -42. + (a.w + 42.) * f * (1. + .18 * (fbm(q * .05 + b.w, 3) - .5));
+      let dir = (q - a.xy) / max(length(q - a.xy), 1e-3);
+      let d2 = d * (1. + .5 * (fbm(dir * 1.3 + b.w, 3) - .5));
+      let f = exp(-pow(d2, 4.5));
+      e = -42. + (a.w + 42.) * f * (1. + .26 * (fbm(q * .045 + b.w, 3) - .5));
     }
     h = smax(h, e, 7.);
   }
@@ -202,7 +204,7 @@ fn hazeAmt(wp: vec3f, g: G) -> f32 {
   let dy = y1 - y0;
   var k = exp(-y0 / H);
   if (abs(dy) > 1.) { k = H * (exp(-y0 / H) - exp(-y1 / H)) / dy; }
-  return 1. - exp(-d * k / 2600.);
+  return 1. - exp(-d * k / 3600.);
 }
 fn haze(c: vec3f, wp: vec3f, g: G) -> vec3f {
   let rd = normalize(wp - g.cam.xyz);
@@ -296,9 +298,9 @@ fn stars(rd: vec3f) -> vec3f {
   let i = floor(p);
   for (var x = -1; x <= 1; x++) { for (var y = -1; y <= 1; y++) {
     let cc = i + vec2f(f32(x), f32(y));
-    let r = h21(cc + 17.); if (r > .3) { continue; }
+    let r = h21(cc + 17.); if (r > .17) { continue; }
     let o = cc + vec2f(h21(cc), h21(cc + 5.1)) * .8 + .1;
-    let q = (p - o) / (.11 + .14 * h21(cc + 2.2));
+    let sz = h21(cc + 2.2); let q = (p - o) / (.07 + .26 * sz * sz);
     let a = atan2(q.y, q.x) + h21(cc + 9.) * 6.28; let rr = length(q);
     let k = cos(a * 5.) * .5 + .5;
     let edge = mix(.42, 1., pow(k, 3.));
@@ -361,7 +363,7 @@ struct TO { @builtin(position) cp: vec4f, @location(0) wp: vec3f, @location(1) n
 fn layerCol(y: f32) -> vec3f {
   var P = array<vec4f, 12>(vec4f(-44., .15, .25, .42), vec4f(-24., .2, .4, .55), vec4f(-10., .36, .6, .66), vec4f(-4., .55, .76, .72),
     vec4f(0., .91, .85, .69), vec4f(4., .75, .82, .55), vec4f(16., .58, .74, .45), vec4f(40., .42, .62, .4), vec4f(80., .45, .55, .41),
-    vec4f(124., .6, .58, .5), vec4f(168., .76, .74, .69), vec4f(196., .95, .94, .91));
+    vec4f(124., .6, .6, .54), vec4f(158., .74, .75, .74), vec4f(176., .96, .97, .98));
   var c = P[0].yzw;
   for (var i = 1; i < 12; i++) { let a = P[i - 1]; let b = P[i]; if (y > a.x) { c = mix(a.yzw, b.yzw, sat((y - a.x) / (b.x - a.x))); } }
   return c;
@@ -379,7 +381,7 @@ fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), 
   let gl = max(length(hg.yz), .015);
   // each sheet its own shade, alternating slightly so neighbouring sheets read apart
   let jit = h21(vec2f(k, 3.7));
-  var base = mix(layerCol(y), jade(y), karst(i.wp.xz) * ss(2., 8., y)) * (1. + .05 * (jit - .5) + .025 * select(-1., 1., (i32(k) & 1) == 0));
+  var base = mix(layerCol(y), jade(y), karst(i.wp.xz) * ss(2., 8., y)) * (1. + .025 * (jit - .5) + .02 * select(-1., 1., (i32(k) & 1) == 0));
   let reg = vn2(i.wp.xz * .0016);
   base *= mix(vec3f(1.04, 1.02, .9), vec3f(.95, 1., 1.05), reg) ;
   let gm = textureSampleLevel(tM, sC, (i.wp.xz - WO) / WORLD, 0.);
@@ -394,8 +396,14 @@ fn jade(y: f32) -> vec3f { return mix(vec3f(.4, .62, .46), vec3f(.5, .68, .56), 
     base *= 1. + .07 * ss(.45, .0, own);
     sh = shLand(i.wp.xz, 0.);
   } else {
+    // the cut edge: shaded along the sheet's smooth outline rather than per segment
+    let e = GS * 1.2;
+    let gx = hgrid(i.wp.xz + vec2f(e, 0.)).x - hgrid(i.wp.xz - vec2f(e, 0.)).x;
+    let gz = hgrid(i.wp.xz + vec2f(0., e)).x - hgrid(i.wp.xz - vec2f(0., e)).x;
+    let sn = normalize(vec3f(-gx, 0., -gz) + n * .05);
+    if (dot(sn, n) > .2) { n = sn; }
     base = mix(base, vec3f(.97, .95, .9), .16);
-    base *= mix(.42, 1., ss(.0, .2, v)) * (1. + .1 * ss(.9, 1., v));
+    base *= mix(.62, 1., ss(.0, .16, v)) * (1. + .22 * ss(.9, .97, v));
     ao = .9;
     sh = shLand(i.wp.xz + n.xz * GS * .6, i.wp.y - y + L);
   }
@@ -437,19 +445,16 @@ fn facet(p: vec2f) -> vec3f {
   let depth = WL - fl;
   let d = distance(i.wp, g.cam.xyz);
   let v = normalize(g.cam.xyz - i.wp);
-  let n = normalize(mix(facet(i.wp.xz), vec3f(0., 1., 0.), ss(300., 1400., d)));
+  let n = normalize(mix(facet(i.wp.xz), vec3f(0., 1., 0.), ss(140., 650., d)));
   let deep = ss(2., 30., depth);
   var col = lin(mix(vec3f(.62, .86, .84), vec3f(.16, .36, .52), deep));
   let sh = mix(.45, 1., shLand(i.wp.xz, depth) * shNear(i.wp));
   var c = shade(col, n, sh, 1., .4) * paper(i.wp, vec3f(0., 1., 0.), .25);
   let fr = .04 + .32 * pow(1. - sat(dot(n, v)), 4.);
   c = mix(c, skyc(reflect(-v, n), g), fr);
-  // a soft sheen across whole facets, and small sparkles where the light catches the paper's grain
+  // a soft sheen that drifts across the facets as they slowly tilt
   let hv = normalize(g.key.xyz + v);
-  let cell = floor(i.wp.xz * 1.25);
-  let nj = normalize(n + (vec3f(h21(cell), 0., h21(cell + 7.3)) - vec3f(.5, 0., .5)) * .3);
-  let spark = pow(max(dot(nj, hv), 0.), 500.) * ss(260., 30., d) * step(.55, h21(cell + 3.1));
-  c += g.keyc.rgb * g.key.w * (pow(max(dot(n, hv), 0.), 40.) * .12 + spark * 1.3) * sh;
+  c += g.keyc.rgb * g.key.w * (pow(max(dot(n, hv), 0.), 60.) * .16 + pow(max(dot(n, hv), 0.), 8.) * .03) * sh;
   var a = mix(.42, .95, ss(1., 26., depth));
   // shore: a strip of white paper that slowly breathes in and out
   let dsh = -hg.x / max(length(hg.yz), .02);
@@ -481,7 +486,7 @@ fn place(i: PI) -> vec3f {
     return a.xyz + rotY(p * a.w, b.x);
   }
   if (KIND == 1) {
-    let sz = 1.1 + b.z * .5;
+    let sz = 2. + b.z * .7;
     let span = f32(i.at.z) / 127.5 - 1.;
     p.y += sin(t * 3.1 + b.z * 40.) * abs(span) * abs(span) * .55 - .08 * abs(span);
     let th = b.x + t * b.w / a.w;
@@ -549,7 +554,7 @@ fn seigaiha(p: vec2f) -> f32 {
       base = vec3f(.3, .28, .3);
       emit = lin(vec3f(1., .72, .4)) * 3.5 * g.hor.w;
     }
-    case 4u: { base = vec3f(.2, .19, .22); thin = 0.; }
+    case 4u: { base = vec3f(.24, .27, .31); thin = 0.; }
     case 5u: { base = vec3f(.72, .7, .66); thin = 0.; }
     case 6u: { base = i.col; emit = lin(i.col) * 7. * g.hor.w; thin = .6; }
     default: { base = i.col * .78; }
@@ -557,9 +562,15 @@ fn seigaiha(p: vec2f) -> f32 {
   if (KIND == 5) {
     let pat = seigaiha(i.lp.xz * 3.2);
     base = select(vec3f(.97, .96, .92), mix(i.col, vec3f(1., .86, .72), pat * .32), ff);
+    let ax = abs(i.lp.x);
+    let crease = 1. - ss(.04, 0., ax) * .3 - ss(.025, 0., abs(ax - .2 * (1. - i.lp.z))) * .16;
+    base *= crease * mix(.9, 1.06, ss(.1, .9, ax));
     thin = .7;
   }
-  if (KIND == 3) { thin = .9; }
+  if (KIND == 3) {
+    thin = .9;
+    base *= 1. - .45 * g.keyc.w;
+  }
   base = lin(base) * i.shade;
   let hg = hgrid(i.wp.xz);
   let rel = i.wp.y - sheetY(hg.x);
@@ -592,7 +603,7 @@ fn tmap(x: vec3f) -> vec3f { return clamp((x * (2.51 * x + .03)) / (x * (2.43 * 
   c *= 1. - dot(q, q) * .4;
   c = tmap(c);
   let l = dot(c, vec3f(.2126, .7152, .0722));
-  c = mix(c, l * vec3f(.82, .92, 1.12), g.keyc.w * .38);
+  c = mix(c, l * vec3f(.8, .9, 1.12), g.keyc.w * .4 * ss(.75, .35, l));
   c = pow(max(c, vec3f(0.)), vec3f(1. / 2.2));
   c = c * .985 + vec3f(.012, .01, .016);
   let n = ign(fc.xy) + ign(fc.xy + 37.) - 1.;

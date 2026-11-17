@@ -239,6 +239,7 @@ addEventListener('pagehide', () => keep('paperskiesLoad', ''));
   br.destroy();
   bd.destroy();
 }
+smoothHeights();
 Q.writeTexture({ texture: tH }, HM, { bytesPerRow: GN * 4 }, [GN, GN]);
 
 await say('Stacking the paper…', 0.35, 1500);

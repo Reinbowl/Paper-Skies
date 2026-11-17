@@ -66,6 +66,23 @@ const roomAt = (x, z) => {
   return min(h - k * LAYER, (k + 1) * LAYER - h) / g;
 };
 
+// soften the heights (two passes of a 1-2-1 blur each way), so every sheet's outline is a clean curve
+function smoothHeights() {
+  const t = new Float32Array(GN * GN);
+  for (let pass = 0; pass < 2; pass++) {
+    for (let j = 0; j < GN; j++)
+      for (let i = 0; i < GN; i++) {
+        const k = i + GN * j;
+        t[k] = (HM[i > 0 ? k - 1 : k] + 2 * HM[k] + HM[i < GN - 1 ? k + 1 : k]) * 0.25;
+      }
+    for (let j = 0; j < GN; j++)
+      for (let i = 0; i < GN; i++) {
+        const k = i + GN * j;
+        HM[k] = (t[j > 0 ? k - GN : k] + 2 * t[k] + t[j < GN - 1 ? k + GN : k]) * 0.25;
+      }
+  }
+}
+
 // ---------------------------------------------------------------- land mesh: stacked sheets of paper
 // Sheet k covers the ground where h >= k * LAYER; its top is flat at k * LAYER and its cut edge is a wall one sheet
 // tall. Flat stretches merge into quadtree squares; their sides pick up every vertex of finer neighbours, so the
@@ -334,17 +351,25 @@ function meshRound(lod) {
   const tr = m.ring(5, 0, 0.3, 0, 120);
   const tt = m.ring(5, 2.6, 0.22, 0, 200);
   m.band(tr, tt);
-  rseed(40 + lod);
-  const crown = icosphere(
-    lod ? 0 : 1,
-    (x, y, z) => {
-      const r = 2.7 * (1 + rr(-0.12, 0.12));
-      return [x * r, 4.7 + y * r * 0.88, z * r];
-    },
-    1,
-  );
-  for (let k = 0; k < crown.a.length; k += 4) crown.a[k + 1] = round(150 + 105 * sstep(2.4, 7, crown.p[(k / 4) * 3 + 1]));
-  m.add(crown);
+  // a pleated paper ball: two rings of alternating folds between a low and a high point
+  const n = lod ? 6 : 12;
+  const r = 2.8;
+  const eq = [];
+  const hi = [];
+  for (let k = 0; k < n; k++) {
+    const a = (k / n) * TAU;
+    const out = k % 2 === 0;
+    eq.push(m.v(cos(a) * r * (out ? 1 : 0.74), 4.3 + (out ? 0 : 0.35), sin(a) * r * (out ? 1 : 0.74), 1, out ? 225 : 180));
+    const b = a + PI / n;
+    hi.push(m.v(cos(b) * r * (out ? 0.66 : 0.5), 6.1 + (out ? 0 : 0.25), sin(b) * r * (out ? 0.66 : 0.5), 1, out ? 245 : 215));
+  }
+  m.fan(eq, m.v(0, 2.5, 0, 1, 120), true);
+  for (let k = 0; k < n; k++) {
+    const k2 = (k + 1) % n;
+    m.tri(eq[k], eq[k2], hi[k]);
+    m.tri(eq[k2], hi[k2], hi[k]);
+  }
+  m.fan(hi, m.v(0, 7.1, 0, 1, 255));
   return m;
 }
 function meshBush() {
@@ -395,8 +420,8 @@ function meshHouse() {
 }
 function meshPagoda() {
   const m = new Mesh();
-  m.box(-5, -2, -5, 5, 0.6, 5, 5);
-  let y = 0.6;
+  m.box(-3.9, -2, -3.9, 3.9, 0.5, 3.9, 5);
+  let y = 0.5;
   for (let t = 0; t < 4; t++) {
     const w = 3.3 - t * 0.6;
     m.box(-w, y, -w, w, y + 2.4, w, 1);
@@ -408,9 +433,9 @@ function meshPagoda() {
       const a = (k / 8) * TAU + PI / 4;
       const corner = k % 2 === 0;
       const r = corner ? o * Math.SQRT2 : o;
-      c.push(m.v(cos(a) * r, y + (corner ? 0.55 : 0), sin(a) * r, 4, corner ? 230 : 190));
+      c.push(m.v(cos(a) * r, y + (corner ? 1.05 : 0.05), sin(a) * r, 4, corner ? 235 : 185));
     }
-    const apex = m.v(0, y + 1.6, 0, 4, 255);
+    const apex = m.v(0, y + 1.9, 0, 4, 255);
     m.fan(c, apex);
     m.fan(c, m.v(0, y - 0.2, 0, 4, 90), true);
     y += 0.9;
@@ -515,22 +540,29 @@ function meshCrane() {
 function meshCloud(sd) {
   rseed(60 + sd);
   const m = new Mesh();
-  const n = (4 + rnd() * 3) | 0;
+  const n = 3 + ((rnd() * 3) | 0);
   for (let i = 0; i < n; i++) {
     const cx = rr(-2.2, 2.2);
-    const cz = rr(-1.2, 1.2);
-    const r = rr(0.9, 1.6) * (1 - abs(cx) * 0.15);
-    const cy = r * 0.25;
-    const lump = icosphere(
-      1,
-      (x, y, z) => {
-        const j = 1 + rr(-0.08, 0.08);
-        return [cx + x * r * j, cy + (y < 0 ? y * 0.3 : y) * r * j * 0.85, cz + z * r * j];
-      },
-      1,
-    );
-    for (let k = 0; k < lump.a.length; k += 4) lump.a[k + 1] = round(175 + 80 * sstep(-0.2, 1.4, lump.p[(k / 4) * 3 + 1]));
-    m.add(lump);
+    const cz = rr(-1, 1);
+    const R = rr(1, 1.7) * (1 - abs(cx) * 0.12);
+    const H = R * rr(0.7, 0.9);
+    const p = 14;
+    const rim = [];
+    const mid = [];
+    for (let k = 0; k < p; k++) {
+      const a = (k / p) * TAU;
+      const b = a + PI / p;
+      const o = k % 2 === 0;
+      rim.push(m.v(cx + cos(a) * R * (o ? 1 : 0.9), 0, cz + sin(a) * R * (o ? 1 : 0.9), 1, 200));
+      mid.push(m.v(cx + cos(b) * R * (o ? 0.78 : 0.68), H * 0.62, cz + sin(b) * R * (o ? 0.78 : 0.68), 1, 238));
+    }
+    for (let k = 0; k < p; k++) {
+      const k2 = (k + 1) % p;
+      m.tri(rim[k], rim[k2], mid[k]);
+      m.tri(rim[k2], mid[k2], mid[k]);
+    }
+    m.fan(mid, m.v(cx, H, cz, 1, 255));
+    m.fan(rim, m.v(cx, -0.05, cz, 1, 175), true);
   }
   return m;
 }
@@ -559,11 +591,11 @@ function meshPlane() {
   const N = m.v(0, 0.02, 1);
   const Tr = m.v(0, 0, -1);
   for (const sx of [-1, 1]) {
-    const Mid = m.v(0.4 * sx, 0.05, -1);
-    const Tip = m.v(0.95 * sx, 0.11, -0.97);
+    const Mid = m.v(0.4 * sx, 0.1, -1);
+    const Tip = m.v(0.95 * sx, 0.3, -0.96);
     orient(m, N, Tr, Mid, 0, 1, 0);
     orient(m, N, Mid, Tip, 0, 1, 0);
-    const Kb = m.v(0.03 * sx, -0.3, -0.9);
+    const Kb = m.v(0.035 * sx, -0.36, -0.88);
     orient(m, N, Tr, Kb, sx, 0, 0);
   }
   return m;
@@ -682,16 +714,16 @@ function makeWorld() {
     320,
     (x, z, r) => {
       const h = hAt(x, z);
-      return h > -5 && h < -2.4 && roomAt(x, z) > 9 ? -r : -1e9;
+      return h > -5 && h < -2.4 && roomAt(x, z) > 16 ? -r : -1e9;
     },
     20000,
   );
   const tg = [hAt(torii[0] + 4, torii[1]) - hAt(torii[0] - 4, torii[1]), hAt(torii[0], torii[1] + 4) - hAt(torii[0], torii[1] - 4)];
-  put(5, torii[0], groundAt(torii[0], torii[1]) - 0.05, torii[1], 1.3, atan2(tg[0], tg[1]), rgb(0.82, 0.27, 0.2));
+  put(5, torii[0], groundAt(torii[0], torii[1]) - 0.05, torii[1], 1.45, atan2(tg[0], tg[1]), rgb(0.82, 0.27, 0.2));
   claim(torii[0], torii[1], 14);
   const pagoda = spot(240, 170, 160, (x, z) => {
     const h = hAt(x, z);
-    return roomAt(x, z) > 9 && h > 20 ? h : -1e9;
+    return roomAt(x, z) > 12 && h > 20 ? h : -1e9;
   });
   put(4, pagoda[0], groundAt(pagoda[0], pagoda[1]), pagoda[1], 1.25, rnd() * TAU, rgb(0.8, 0.3, 0.22));
   claim(pagoda[0], pagoda[1], 14);
@@ -765,6 +797,23 @@ function makeWorld() {
     splat(x, z, 3.2 * sc, 0, 0.3);
     splat(x, z, 8, 1, 0.09);
   }
+  // pines on the tops of the karst pillars
+  for (const s of ISLANDS) {
+    if (s[4] !== 2) continue;
+    let n = 0;
+    for (let i = 0; i < 400 && n < 9; i++) {
+      const a = rnd() * TAU;
+      const r = sqrt(rnd()) * s[2] * 0.6;
+      const x = s[0] + cos(a) * r;
+      const z = s[1] + sin(a) * r;
+      const h = hAt(x, z);
+      const sc = rr(0.6, 1.1);
+      if (h < s[3] * 0.55 || roomAt(x, z) < 0.9 * sc || !free(x, z, 1.2 * sc)) continue;
+      put(rnd() < 0.75 ? 0 : 1, x, floor(h / LAYER) * LAYER, z, sc, rnd() * TAU, pick(rnd() < 0.75 ? PAL_PINE : PAL_ROUND), 0.6);
+      splat(x, z, 3, 0, 0.3);
+      n++;
+    }
+  }
   rseed(5);
   for (let i = 0; i < 40000 / THIN; i++) {
     const x = WO + rnd() * WORLD;
@@ -824,8 +873,8 @@ function makeWorld() {
       );
   }
   const clouds = [];
-  for (let i = 0; i < 46; i++)
-    clouds.push(WO + rnd() * WORLD, rr(170, 300), WO + rnd() * WORLD, rr(9, 19), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
+  for (let i = 0; i < 30; i++)
+    clouds.push(WO + rnd() * WORLD, rr(160, 320), WO + rnd() * WORLD, rr(12, 30), rnd() * TAU, rgb(0.98, 0.97, 0.95), rnd(), rr(1.2, 2.6));
   const lanterns = [];
   for (const c of villages)
     for (let k = 0; k < 14; k++)
@@ -835,7 +884,7 @@ function makeWorld() {
         c[1] + rr(-40, 40),
         rr(0.9, 1.3),
         rnd() * TAU,
-        rgb(1, rr(0.62, 0.78), rr(0.35, 0.45)),
+        rgb(1, rr(0.6, 0.7), rr(0.22, 0.3)),
         rnd(),
         rr(2.2, 3.4),
       );
@@ -845,7 +894,7 @@ function makeWorld() {
     const x = torii[0] + cos(a) * r;
     const z = torii[1] + sin(a) * r;
     if (hAt(x, z) > -2.5) continue;
-    lanterns.push(x, WL, z, rr(0.5, 0.7), rnd() * TAU, rgb(1, rr(0.6, 0.72), 0.36), rnd(), 0);
+    lanterns.push(x, WL, z, rr(0.5, 0.7), rnd() * TAU, rgb(1, rr(0.58, 0.68), 0.26), rnd(), 0);
   }
 
   // --- pack static props by culling cell
