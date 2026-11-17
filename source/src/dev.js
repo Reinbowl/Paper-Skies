@@ -21,7 +21,8 @@
   const Pg = Wd.pagoda;
   const V0 = Wd.villages[0];
   const POSES = [
-    [T[0] - 10, 16, T[1] + 70, atan2(10, -70) + 0.1, 2.95, 0.35],
+    // offshore, looking through the gate toward the island
+    [T[0] - sin(Wd.toriiYaw) * 75, 15, T[1] - cos(Wd.toriiYaw) * 75, Wd.toriiYaw + 0.12, 2.95, 0.3],
     [-40, 70, 420, atan2(-180, -480), 2.2, -0.3],
     [620, 50, -520, atan2(-1, 0.25), 3.26, 0.25],
     [V0[0] - 60, groundAt(V0[0] - 60, V0[1]) + 48, V0[1] - 20, 1.12, 3.6, 0.3, 0.06],
@@ -149,6 +150,7 @@
     map,
     start,
     stats: () => ({
+      lv: LV,
       tris: TR.ib.length / 3,
       verts: TR.nv,
       props: Wd.stat.map((s) => s.n),

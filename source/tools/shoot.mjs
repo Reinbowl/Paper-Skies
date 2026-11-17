@@ -1,5 +1,5 @@
 // Drives Windows Chrome over CDP to take screenshots of the scene (run with Windows node.exe).
-//   node shoot.mjs <steps.json> [--headful] [--size 2560x1440] [--port 9333]
+//   node shoot.mjs <steps.json> [--headful] [--mobile] [--size 2560x1440] [--port 9333]
 // steps.json: { "url": "...", "out": "dir", "steps": [{ "eval"?, "waitFor"?, "sleep"?, "shot"? }] }
 import { spawn } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -59,10 +59,24 @@ ws.addEventListener('message', (m) => {
     console.log('[exception]', d.params.exceptionDetails.exception?.description || d.params.exceptionDetails.text);
   }
 });
-const send = (method, params = {}) =>
+// every command fails after `limit` ms instead of hanging the run
+const send = (method, params = {}, limit = 180000) =>
   new Promise((resolve, reject) => {
     const id = nextId++;
-    pending.set(id, { resolve, reject });
+    const t = setTimeout(() => {
+      pending.delete(id);
+      reject(new Error(`${method} timed out`));
+    }, limit);
+    pending.set(id, {
+      resolve: (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      reject: (e) => {
+        clearTimeout(t);
+        reject(e);
+      },
+    });
     ws.send(JSON.stringify({ id, method, params }));
   });
 const evaluate = async (expression) => {
@@ -73,7 +87,9 @@ const evaluate = async (expression) => {
 
 await send('Runtime.enable');
 await send('Page.enable');
-await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: 1, mobile: false });
+const mobile = args.includes('--mobile');
+await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: mobile ? 3 : 1, mobile });
+if (mobile) await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
 await send('Page.navigate', { url: cfg.url });
 mkdirSync(cfg.out, { recursive: true });
 
@@ -90,18 +106,26 @@ try {
         await sleep(100);
       }
     }
+    if (s.tap) {
+      const [x, y] = s.tap;
+      for (const type of ['touchStart', 'touchEnd'])
+        await send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
+    }
     if (s.key) {
       const [type, code] = s.key;
       await send('Input.dispatchKeyEvent', { type, code, key: code.replace(/^Key/, '').toLowerCase(), windowsVirtualKeyCode: s.vk || 0 });
     }
     if (s.sleep) await sleep(s.sleep);
     if (s.shot) {
-      const r = await send('Page.captureScreenshot', { format: s.shot.endsWith('.jpg') ? 'jpeg' : 'png', quality: 90 });
+      const r = await send('Page.captureScreenshot', { format: s.shot.endsWith('.jpg') ? 'jpeg' : 'png', quality: 95 });
       writeFileSync(path.join(cfg.out, s.shot), Buffer.from(r.data, 'base64'));
       console.log('shot', s.shot);
     }
   }
 } finally {
+  // leave the page normally first, so its pagehide handlers run (a killed tab looks like a crash to the next visit)
+  await send('Page.navigate', { url: 'about:blank' }, 5000).catch(() => 0);
+  await sleep(500);
   ws.close();
   proc.kill();
 }

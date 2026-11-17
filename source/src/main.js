@@ -32,8 +32,14 @@ $('w').hidden = !!navigator.userAgentData;
 const hasTS = adapter.features.has('timestamp-query');
 const device = await adapter.requestDevice({ requiredFeatures: hasTS ? ['timestamp-query'] : [] });
 device.addEventListener('uncapturederror', (e) => console.error('GPU: ' + e.error.message));
+// a device lost while the page is being left is not a crash: don't lower the detail level for it
+let leaving = false;
+addEventListener('pagehide', () => {
+  leaving = true;
+});
 device.lost.then((l) => {
-  if (l.reason === 'destroyed') return;
+  if (l.reason === 'destroyed' || leaving) return;
+  console.warn(`GPU device lost (${l.reason}): ${l.message}`);
   if (LV < 2) {
     keep('paperskies', LV + 1);
     location.reload();
@@ -922,7 +928,7 @@ function frame(now) {
     const was = pix;
     pix *= k;
     pix = pix < PIXMIN ? PIXMIN : pix > top ? top : pix;
-    if (was !== pix) keep('paperskies', [LV, pix < top ? pix | 0 : '']);
+    if (was !== pix && !LVQ) keep('paperskies', [LV, pix < top ? pix | 0 : '']);
     dynN = dynT = dynG = dynGN = 0;
     resize();
   }
@@ -1051,16 +1057,32 @@ const capture = () => {
 canvas.addEventListener('click', () => {
   if (!auto) capture();
 });
+// with the mouse still for 3 s, the cursor and the menu button fade away so the view is all world
+let idleT = 0;
+const wake = () => {
+  body.classList.remove('z');
+  clearTimeout(idleT);
+  idleT = setTimeout(() => menu || body.classList.add('z'), 3000);
+};
 addEventListener('mousemove', (e) => {
+  wake();
   if (document.pointerLockElement === canvas) {
     mdx += e.movementX;
     mdy += e.movementY;
   }
 });
 addEventListener('blur', release);
+// a touch while the controls have faded only brings them back; the next one steers
+let waking = false;
 const touch = (e) => {
   e.preventDefault();
+  if (e.type === 'touchstart' && body.classList.contains('z')) waking = true;
+  wake();
   sound();
+  if (waking) {
+    if (!e.touches.length) waking = false;
+    return;
+  }
   tN = e.touches.length;
   if (auto && tN && !menu) setMode(true);
   let f = null;
@@ -1102,7 +1124,10 @@ const ui = (m) => {
       setTimeout(() => (switching = false), 300);
     }
     setTimeout(() => menu && bFly.focus(), 100);
-  } else document.activeElement.blur();
+  } else {
+    document.activeElement.blur();
+    wake();
+  }
 };
 const go = (fly) => {
   sound();
@@ -1136,15 +1161,18 @@ $('q')
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement) body.className = 'g p';
   else if (!switching && !auto && !menu) ui(true);
-  else if (!menu) body.className = 'g';
+  else if (!menu) {
+    body.className = 'g';
+    wake();
+  }
 });
 
 // first frame: the plane off the southern shore in the late afternoon, heading for the mountain
 F[TOD] = 2.55;
+// the autopilot takes a different route on every visit
+apSeed = (Math.random() * 4294967296) | 0;
 placePlane(-60, 48, 900, atan2(-160, -940));
 pickGoal();
-FS[GX] = -220;
-FS[GZ] = -60;
 FS[CT] = 0;
 for (let i = 0; i < 240; i++) {
   controls();

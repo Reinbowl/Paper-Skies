@@ -712,12 +712,29 @@ function makeWorld() {
     320,
     (x, z, r) => {
       const h = hAt(x, z);
-      return h > -5 && h < -2.4 && roomAt(x, z) > 16 ? -r : -1e9;
+      if (!(h > -5 && h < -2.4 && roomAt(x, z) > 16)) return -1e9;
+      // out in the bay: open water all around the gate, the shore in sight
+      let shore = false;
+      for (let k = 0; k < 12; k++) {
+        const a = (k / 12) * TAU;
+        if (hAt(x + cos(a) * 24, z + sin(a) * 24) > -0.5) return -1e9;
+        for (let d = 50; d <= 150; d += 25) if (hAt(x + cos(a) * d, z + sin(a) * d) > 2) shore = true;
+      }
+      return shore ? -r : -1e9;
     },
     20000,
   );
-  const tg = [hAt(torii[0] + 4, torii[1]) - hAt(torii[0] - 4, torii[1]), hAt(torii[0], torii[1] + 4) - hAt(torii[0], torii[1] - 4)];
-  const toriiYaw = atan2(tg[0], tg[1]);
+  // the gate faces the nearest shore
+  let toriiYaw = 0;
+  for (let d = 30, found = false; d < 400 && !found; d += 5)
+    for (let k = 0; k < 72; k++) {
+      const a = (k / 72) * TAU;
+      if (hAt(torii[0] + sin(a) * d, torii[1] + cos(a) * d) > 1) {
+        toriiYaw = a;
+        found = true;
+        break;
+      }
+    }
   put(5, torii[0], groundAt(torii[0], torii[1]) - 0.05, torii[1], 1.45, toriiYaw, rgb(0.82, 0.27, 0.2));
   claim(torii[0], torii[1], 14);
   const pagoda = spot(240, 170, 160, (x, z) => {
@@ -774,13 +791,13 @@ function makeWorld() {
     for (const c of villages) d = min(d, hypot(x - c[0], z - c[1]));
     return d;
   };
-  const NT = 90000 / THIN;
+  const NT = 60000 / THIN;
   for (let i = 0; i < NT * 4; i++) {
     const x = WO + rnd() * WORLD;
     const z = WO + rnd() * WORLD;
     const h = hAt(x, z);
     if (h < 3 || h > 178) continue;
-    const forest = sstep(0.45, 0.62, fbm2(x * 0.004, z * 0.004, 4));
+    const forest = sstep(0.48, 0.63, fbm2(x * 0.004, z * 0.004, 4));
     const dv = nearVillage(x, z);
     const cher = sstep(170, 60, dv);
     if (rnd() > forest * 0.9 + cher * 0.35 + 0.025) continue;

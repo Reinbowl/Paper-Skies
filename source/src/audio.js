@@ -1,8 +1,8 @@
 // ============================================================================
-// audio: the music, over a soft bed of wind, sea, birds and crickets
+// audio: the music, over a soft bed of wind, sea and birds
 // ============================================================================
 // A fixed Web Audio graph, built on the first click / key / touch and driven by a 10 Hz timer, not the frame loop.
-// The music (source/music.ogg, embedded by the build) plays whole and loops: its own fade-out is laid over its
+// The music (source/music.m4a, embedded by the build) plays whole and loops: its own fade-out is laid over its
 // opening, so it wraps around without a pause. The wind follows the airspeed, the sea is louder low over the water.
 const MUSIC = '/*MUSIC*/';
 let AC;
@@ -10,6 +10,11 @@ let OUT;
 let MUS;
 let muted = false;
 const VOL = 0.7;
+let vol = 0.7; // the volume slider, kept between visits
+try {
+  const v = localStorage.paperskiesVol;
+  if (v) vol = clamp(+v, 0, 1);
+} catch {}
 const MVOL = 0.62;
 function mkSound(ac) {
   const sr = ac.sampleRate;
@@ -72,14 +77,9 @@ function mkSound(ac) {
     const g = G(0, p);
     return { p, g, o: N(OscillatorNode, {}, g) };
   });
-  // crickets: a high tone pulsed fast, in slow waves
-  const crk = G(0, out, G(0.3, wet));
-  const crkA = G(0, crk);
-  N(OscillatorNode, { frequency: 4400 }, crkA);
-  lfo(23, 0.5, crkA.gain);
   let lt = ac.currentTime;
   let tW = lt + 6;
-  out.gain.setTargetAtTime(VOL, lt, 2);
+  out.gain.setTargetAtTime(muted ? 0 : VOL * vol, lt, 2);
   return () => {
     const now = ac.currentTime;
     const t = now + 0.05;
@@ -94,8 +94,6 @@ function mkSound(ac) {
     rust.gain.setTargetAtTime(0.022 * clamp(abs(FS[ROL]) * 1.6 + FS[BOOST] * 0.8, 0, 1), t, 0.3);
     const overSea = hAt(FS[PX], FS[PZ]) < -1 ? 1 : 0.35;
     sea.gain.setTargetAtTime(0.04 + 0.22 * overSea * sstep(120, 8, alt), t, 1);
-    crk.gain.setTargetAtTime(0.01 * DAY[D_NIGHT] * sstep(90, 20, alt) * (overSea < 1 ? 1 : 0.3), t, 2);
-    crkA.gain.setTargetAtTime(0.5 + 0.5 * sin(now * 0.7), t, 0.5);
     if (t > tW) {
       // birds by day, over the land: a few quick chirps
       if (DAY[D_SY] > 0.08 && overSea < 1 && alt < 120) {
@@ -125,7 +123,7 @@ function mkSound(ac) {
 // that overlap in samples (the loop runs from 0 to the end minus x, and the first pass starts at x)
 async function loadMusic(ac) {
   if (MUSIC.length < 100) return null;
-  const b = await ac.decodeAudioData(await (await fetch('data:audio/ogg;base64,' + MUSIC)).arrayBuffer());
+  const b = await ac.decodeAudioData(await (await fetch('data:audio/mp4;base64,' + MUSIC)).arrayBuffer());
   const n = b.length;
   const w = b.sampleRate >> 2;
   const ch = [];
@@ -164,9 +162,28 @@ function sound() {
   if (AC.state === 'suspended' && !document.hidden) AC.resume();
 }
 function mute() {
-  if (!AC) return;
   muted = !muted;
-  OUT.gain.setTargetAtTime(muted ? 0 : VOL, AC.currentTime, 0.1);
+  setVolume();
+}
+function setVolume() {
+  if (AC) OUT.gain.setTargetAtTime(muted ? 0 : VOL * vol, AC.currentTime, 0.05);
+}
+// the volume slider in the menu: a strip of paper filling with ink
+{
+  const el = $('vol');
+  const show = () => {
+    el.value = round(vol * 100);
+    el.style.setProperty('--v', `${round(vol * 100)}%`);
+  };
+  show();
+  el.oninput = () => {
+    vol = el.value / 100;
+    muted = false;
+    show();
+    sound();
+    setVolume();
+    keep('paperskiesVol', vol);
+  };
 }
 document.addEventListener('visibilitychange', () => {
   if (AC) document.hidden ? AC.suspend() : AC.resume();

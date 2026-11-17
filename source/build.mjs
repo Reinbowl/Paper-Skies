@@ -18,7 +18,7 @@ if (dev) FILES.push('dev.js');
 
 let js = FILES.map((f) => readFileSync(path.join(here, 'src', f), 'utf8')).join('\n');
 // the music, embedded as base64 (see audio.js)
-const music = path.join(here, 'music.ogg');
+const music = path.join(here, 'music.m4a');
 js = js.replace("'/*MUSIC*/'", () => JSON.stringify(existsSync(music) ? readFileSync(music).toString('base64') : ''));
 const tpl = readFileSync(path.join(here, 'template.html'), 'utf8');
 // everything runs inside one async function; startup errors are shown on screen

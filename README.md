@@ -2,7 +2,7 @@
 
 **A calm origami world you drift over in a paper plane, right in your browser.**
 
-Islands made of stacked sheets of paper, a translucent paper sea, cherry trees, a pagoda on the hill and a red torii gate standing in the shallows. The sun folds into the sea at dusk, an origami moon rises, and paper lanterns drift up from the villages. Everything you see is made by code: no images, no 3D models. The whole world, music included, fits in **one HTML file of about 2.8 MB** (81 KB of it is the world; the rest is the music).
+Islands made of stacked sheets of paper, a translucent paper sea, cherry trees, a pagoda on the hill and a red torii gate standing in the shallows. The sun folds into the sea at dusk, an origami moon rises, and paper lanterns drift up from the villages. Everything you see is made by code: no images, no 3D models. The whole world, music included, fits in **one HTML file of about 3.8 MB** (82 KB of it is the world; the rest is the music).
 
 ![The torii gate in the bay](.github/screenshots/torii.jpg)
 
@@ -14,10 +14,14 @@ Islands made of stacked sheets of paper, a translucent paper sea, cherry trees, 
 
 Nothing to install, and it works offline. It needs a browser with **WebGPU**.
 
+## On a phone
+
+It needs a phone browser with WebGPU: **Chrome on a recent Android phone** (Android 12 or newer), or **Safari on an iPhone or iPad with iOS 26** or newer. Phones start on the Low or Medium detail level, the page turns to landscape, and you steer by touch (see below). It is tested on a desktop only so far, so treat phones as a bonus.
+
 ## Two ways to fly
 
 - **Fly**: you steer the plane. It glides on its own, banks into turns, picks up speed in a dive and slows in a climb. Rising ground lifts it gently over each sheet, and far out over the sea a soft wind turns it back toward the islands, so there is nothing to crash into.
-- **Autopilot**: the plane wanders by itself, drifting from one place to the next (the mountain, the pillars, the villages, the torii, the pagoda) at a height that slowly rises and falls. The camera drifts around it a little. It also flies behind the menu.
+- **Autopilot**: the plane wanders by itself, drifting from one place to the next (the mountain, the pillars, the villages, the torii, the pagoda) at a height that slowly rises and falls, on a different route every visit. The camera drifts around it a little. Leave the mouse still for 3 seconds and the cursor and the menu button fade away, so there is only the world. It also flies behind the menu.
 
 The camera always keeps the plane in the middle of the screen.
 
@@ -28,7 +32,7 @@ The camera always keeps the plane in the middle of the screen.
 - **Karst pillars** rising from the sea in the north-east, a snow-capped cone on the main island, rolling green islets
 - **Folded props**: pleated pines, slotted paper-card trees (cherry and maple among them), houses with windows that light up at night, a pagoda with sweeping eaves, a torii gate with slow ripples around its posts, paper boats, flocks of origami cranes and pleated clouds
 - **Day and night**: a pleated paper sun crosses the sky and sets into the sea as a crescent moon rises; folded stars come out, and lanterns drift up over the villages and float on the bay
-- **Music**: *風の呼吸 (Breath of the Wind)*, a flute piece made with [Suno](https://suno.com), looping without a pause, over a soft bed of wind over the wings, the sea below, birds by day and crickets by night
+- **Music**: *風の呼吸 (Breath of the Wind)*, a flute piece made with [Suno](https://suno.com), looping without a pause, over a soft bed of wind over the wings, the sea below and birds by day
 
 | | |
 |---|---|
@@ -47,6 +51,7 @@ The camera always keeps the plane in the middle of the screen.
 | Fly / autopilot | `Tab` (steering on autopilot also takes the controls) |
 | Hurry the time of day | Hold `T` |
 | Menu | `Esc` |
+| Volume | The slider in the menu (`Esc`); it is remembered |
 | Sound on / off | `M` (sound starts when you begin) |
 | Performance stats | `H` |
 
@@ -62,7 +67,7 @@ The **Low**, **Medium** and **High** buttons in the menu pick the detail level (
 | **Medium** | Half of the trees and bushes |
 | **Low** | A quarter of them, a 3 m land grid, no anti-aliasing, smaller shadow maps, 480p to start with |
 
-If loading crashes the tab or the graphics driver gives up, the page starts again one level lower. The browser remembers the level and the resolution the scene settled on. On slower hardware the resolution adjusts itself to hold 60 fps.
+Adding `?lv=0`, `?lv=1` or `?lv=2` to the address (High, Medium, Low) forces a level for that visit without changing what is remembered. If loading crashes the tab or the graphics driver gives up, the page starts again one level lower. The browser remembers the level and the resolution the scene settled on. On slower hardware the resolution adjusts itself to hold 60 fps.
 
 ## How it works
 
@@ -71,7 +76,7 @@ If loading crashes the tab or the graphics driver gives up, the page starts agai
 - Everything is drawn with **WebGPU** directly. No game engine or 3D library is used.
 - The music is embedded in the page. It plays whole and loops: when it is decoded, its own fade-out is laid over its opening, so it wraps around without a pause.
 - The plane flies on a small fixed-step flight model shared by both modes, so the autopilot and your hands feel the same and you can switch at any moment.
-- It's light: about 1.8 ms of GPU time per frame on average at 2560x1440 on an RTX 4060 Ti (2.4 ms at the 99th percentile, 3.1 ms at worst, over a one-minute flight), so it leaves plenty of room on slower hardware.
+- It's light: about 2 ms of GPU time per frame on average at 2560x1440 on High on an RTX 4060 Ti (2.6 ms at the 99th percentile, 3.2 ms at worst, over a one-minute flight), so it leaves plenty of room on slower hardware.
 
 ## Make it your own
 
@@ -92,8 +97,8 @@ npm run build
 | [`source/src/sky.js`](source/src/sky.js) | The time of day: the sun and moon paths and the sky colours |
 | [`source/src/plane.js`](source/src/plane.js) | The flight model, the autopilot and the chase camera |
 | [`source/src/main.js`](source/src/main.js) | The renderer, the frame loop, the controls and the menu |
-| [`source/src/audio.js`](source/src/audio.js) | The music loop and the wind, sea, birds and crickets under it |
-| [`source/music.ogg`](source/music.ogg) | The music (Opus, 64 kbit/s), embedded by the build |
+| [`source/src/audio.js`](source/src/audio.js) | The music loop, the volume, and the wind, sea and birds under the music |
+| [`source/music.m4a`](source/music.m4a) | The music (AAC, 96 kbit/s, which every browser can decode), embedded by the build |
 | [`source/src/quality.js`](source/src/quality.js) | The detail levels |
 | [`source/src/math.js`](source/src/math.js) | Noise, random numbers, world constants and the mesh builder |
 | [`source/src/dev.js`](source/src/dev.js) | Development tools, only in `dev.html` |
@@ -106,7 +111,7 @@ Some easy first tweaks:
 - **Land colours:** `layerCol` in `shaders.js`
 - **The islands:** the `ISLANDS` list at the top of `world.js`
 - **The plane's colour:** `PLANE_COL` in `main.js`
-- **The music:** replace `source/music.ogg` (for example `ffmpeg -i song.mp3 -vn -map_metadata -1 -c:a libopus -b:a 64k source/music.ogg`) and rebuild; delete it to fly with only the wind and the sea. Its level is `MVOL` in `audio.js`
+- **The music:** replace `source/music.m4a` (for example `ffmpeg -i song.mp3 -vn -map_metadata -1 -c:a aac -b:a 96k source/music.m4a`) and rebuild; delete it to fly with only the wind and the sea. Its level is `MVOL` in `audio.js`
 
 ## Credits
 
