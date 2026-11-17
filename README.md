@@ -1,4 +1,4 @@
-# Paper Skies
+# [Paper Skies](https://reinbowl.github.io/Paper-Skies/)
 
 **A calm origami world you drift over in a paper plane, right in your browser.**
 
@@ -103,6 +103,7 @@ npm run build
 | [`source/src/math.js`](source/src/math.js) | Noise, random numbers, world constants and the mesh builder |
 | [`source/src/dev.js`](source/src/dev.js) | Development tools, only in `dev.html` |
 | [`source/template.html`](source/template.html) | The page around the scene: loading bar, menu and their styles |
+| [`source/icons`](source/icons) | The paper plane icon for browser tabs, phones and home screens (SVG sources and the PNGs made from them) |
 
 Some easy first tweaks:
 

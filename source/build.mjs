@@ -20,7 +20,16 @@ let js = FILES.map((f) => readFileSync(path.join(here, 'src', f), 'utf8')).join(
 // the music, embedded as base64 (see audio.js)
 const music = path.join(here, 'music.m4a');
 js = js.replace("'/*MUSIC*/'", () => JSON.stringify(existsSync(music) ? readFileSync(music).toString('base64') : ''));
-const tpl = readFileSync(path.join(here, 'template.html'), 'utf8');
+// the paper plane icon for browser tabs, phones and home screens (source/icons), embedded so the page stays one file
+const icon = (f) => readFileSync(path.join(here, 'icons', f));
+const png = (f) => 'data:image/png;base64,' + icon(f).toString('base64');
+const icons = [
+  `<link rel=icon type=image/png sizes=32x32 href="${png('icon-32.png')}">`,
+  `<link rel=icon type=image/png sizes=192x192 href="${png('icon-192.png')}">`,
+  `<link rel=icon type=image/svg+xml href="data:image/svg+xml,${encodeURIComponent(icon('icon.svg').toString().trim())}">`,
+  `<link rel=apple-touch-icon href="${png('apple-touch-icon.png')}">`,
+].join('\n');
+const tpl = readFileSync(path.join(here, 'template.html'), 'utf8').replace('<!--ICONS-->', () => icons);
 // everything runs inside one async function; startup errors are shown on screen
 const wrap = (body) =>
   `(async()=>{${body}\n})().catch(e=>{console.error(e);document.body.className='l e';document.getElementById('s').textContent=(e.cause?'':'Failed to start: ')+e.message});`;

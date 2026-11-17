@@ -1,5 +1,5 @@
 // Drives Windows Chrome over CDP to take screenshots of the scene (run with Windows node.exe).
-//   node shoot.mjs <steps.json> [--headful] [--mobile] [--size 2560x1440] [--port 9333]
+//   node shoot.mjs <steps.json> [--headful] [--mobile] [--transparent] [--size 2560x1440] [--port 9333]
 // steps.json: { "url": "...", "out": "dir", "steps": [{ "eval"?, "waitFor"?, "sleep"?, "shot"? }] }
 import { spawn } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -90,6 +90,7 @@ await send('Page.enable');
 const mobile = args.includes('--mobile');
 await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: mobile ? 3 : 1, mobile });
 if (mobile) await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+if (args.includes('--transparent')) await send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
 await send('Page.navigate', { url: cfg.url });
 mkdirSync(cfg.out, { recursive: true });
 
