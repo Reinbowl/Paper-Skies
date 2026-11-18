@@ -36,7 +36,8 @@ body:not(.g) canvas { filter: blur(.8vmax) saturate(.85) brightness(1.04); trans
   background: radial-gradient(closest-side, #fbf7efd9, #f6f0e4a6 55%, #efe6d633);
   transition: opacity .6s, visibility .6s;
 }
-.g #m, .m #l, .l #g { opacity: 0; visibility: hidden; }
+/* pointer-events at once: visibility only turns hidden when its fade ends, and until then the menu would catch touches */
+.g #m, .m #l, .l #g { opacity: 0; visibility: hidden; pointer-events: none; }
 #m svg { width: 3.6em; height: 3.6em; margin-bottom: -.6em; }
 h1 {
   margin: 0; font: 400 4.2em/1 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;

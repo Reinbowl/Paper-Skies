@@ -1072,17 +1072,13 @@ addEventListener('mousemove', (e) => {
   }
 });
 addEventListener('blur', release);
-// a touch while the controls have faded only brings them back; the next one steers
-let waking = false;
+// every touch brings the faded menu button back and steers at once (a touch is never swallowed: on a phone the
+// controls are faded nearly every time a finger goes down). The stick is measured from where the finger went
+// down, so a tap on its own doesn't move the plane.
 const touch = (e) => {
   e.preventDefault();
-  if (e.type === 'touchstart' && body.classList.contains('z')) waking = true;
   wake();
   sound();
-  if (waking) {
-    if (!e.touches.length) waking = false;
-    return;
-  }
   tN = e.touches.length;
   if (auto && tN && !menu) setMode(true);
   let f = null;
